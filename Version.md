@@ -161,3 +161,24 @@
   - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/settings/GboardPatchesSettingsActivity.java` (Modified)
   - `patches-bundle.json` (Modified)
   - `Version.md` (Appended)
+
+### [2026-09-21 20:46:00 IST] Official v1.0.0 Release Configuration & Material 3 Expressive UI Realignment
+- **Status:** Release Prepared & Validated for Morphe
+- **Version:** v1.0.0 (First Official Release)
+- **Repository:** https://github.com/mrdarksidetm/Gboard-patches
+- **Summary:**
+  - **Material 3 Expressive UI Realignment:**
+    - Explicitly tuned GboardPatchesSettingsActivity.java to strict Material 3 Expressive design tokens, eliminating generic/muted dynamic Monet pastels in favor of vibrant, high-chroma expressive indigo/cobalt accents (#3855E0 light / #7A94FF dark) and expressive tinted container layers (#EEF2FA light / #222634 dark).
+    - Upgraded card corner radii to 24dp for full M3 Expressive card geometry and 999dp pill chips.
+  - **Morphe Distribution Specification & Versioning:**
+    - Aligned project release version to v1.0.0 across gradle.properties, patches-bundle.json, and .github/workflows/release.yml.
+    - Generated public distribution metadata targeting https://github.com/mrdarksidetm/Gboard-patches/releases/download/v1.0.0/patches-1.0.0.mpp.
+    - Upgraded .github/workflows/release.yml with workflow_dispatch input support for manual dispatch while maintaining automated tag-based triggers (v*).
+  - **Invariants Verification:**
+    - Executed scripts/verify-invariants.ps1 with 100% pass across all 4 critical fork pillars.
+- **Files Modified:**
+  - gradle.properties (Modified to v1.0.0)
+  - patches-bundle.json (Modified to v1.0.0 & Morphe metadata)
+  - .github/workflows/release.yml (Modified)
+  - extensions/extension/src/main/java/dev/jason/gboardpatches/extension/settings/GboardPatchesSettingsActivity.java (Modified)
+  - Version.md (Appended)

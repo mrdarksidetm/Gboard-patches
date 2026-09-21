@@ -2,6 +2,11 @@ name: Release from tag
 
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g. v1.0.0)'
+        required: false
+        default: 'v1.0.0'
   push:
     tags:
       - 'v*'
@@ -42,8 +47,9 @@ jobs:
         shell: pwsh
         env:
           REPO_SLUG: ${{ github.repository }}
+          INPUT_TAG: ${{ inputs.tag }}
         run: |
-          $tag = $env:GITHUB_REF_NAME
+          $tag = if (-not [string]::IsNullOrWhiteSpace($env:INPUT_TAG)) { $env:INPUT_TAG } elseif ($env:GITHUB_REF_NAME -and $env:GITHUB_REF_NAME.StartsWith("v")) { $env:GITHUB_REF_NAME } else { "v1.0.0" }
           if (-not $tag.StartsWith("v")) {
               throw "Release tag must start with 'v'."
           }
@@ -74,6 +80,7 @@ jobs:
               throw "patches-bundle.json signature_download_url must be empty for the public repo."
           }
 
+          "tag=$tag" >> $env:GITHUB_OUTPUT
           "version=$actualVersion" >> $env:GITHUB_OUTPUT
 
       - name: Prepare release notes
@@ -89,8 +96,9 @@ jobs:
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
+          tag_name: ${{ steps.metadata.outputs.tag }}
+          name: Gboard Patches ${{ steps.metadata.outputs.tag }}
           body_path: release-notes.md
-          prerelease: ${{ contains(github.ref_name, '-dev.') }}
+          prerelease: ${{ contains(steps.metadata.outputs.tag, '-dev.') }}
           files: |
             patches/build/libs/patches-${{ steps.metadata.outputs.version }}.mpp

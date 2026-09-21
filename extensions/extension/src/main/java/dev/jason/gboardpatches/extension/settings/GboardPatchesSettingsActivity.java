@@ -3776,38 +3776,38 @@ public final class GboardPatchesSettingsActivity extends Activity
                     == Configuration.UI_MODE_NIGHT_YES;
             if (nightMode) {
                 return new Palette(
-                        Color.parseColor("#FF111318"),
-                        Color.parseColor("#FF1E2025"),
-                        Color.parseColor("#FF282A2F"),
-                        Color.TRANSPARENT,
-                        Color.parseColor("#1FFFFFFF"),
-                        Color.parseColor("#FF004A77"),
-                        Color.parseColor("#FF4C3A00"),
-                        Color.parseColor("#FF1B1D22"),
-                        Color.parseColor("#FFE2E2E6"),
-                        Color.parseColor("#FFC4C7C5"),
-                        Color.parseColor("#FF8E918F"),
-                        Color.parseColor("#FFA8C7FA"),
-                        Color.parseColor("#FF004A77"),
-                        Color.parseColor("#FFD3E3FD"),
-                        Color.parseColor("#20A8C7FA"));
+                        Color.parseColor("#FF0E1017"),
+                        Color.parseColor("#FF181B24"),
+                        Color.parseColor("#FF222634"),
+                        Color.parseColor("#1AFFFFFF"),
+                        Color.parseColor("#18FFFFFF"),
+                        Color.parseColor("#FF0C3266"),
+                        Color.parseColor("#FF4E3802"),
+                        Color.parseColor("#FF1D202B"),
+                        Color.parseColor("#FFF0F2FA"),
+                        Color.parseColor("#FFB8BCD0"),
+                        Color.parseColor("#FF7B8092"),
+                        Color.parseColor("#FF7A94FF"),
+                        Color.parseColor("#FF21307B"),
+                        Color.parseColor("#FFE0E5FF"),
+                        Color.parseColor("#247A94FF"));
             }
             return new Palette(
-                    Color.parseColor("#FFF8F9FA"),
+                    Color.parseColor("#FFF8F9FE"),
                     Color.parseColor("#FFFFFFFF"),
-                    Color.parseColor("#FFF0F4F9"),
-                    Color.TRANSPARENT,
-                    Color.parseColor("#14000000"),
-                    Color.parseColor("#FFD3E3FD"),
-                    Color.parseColor("#FFFEF7E0"),
-                    Color.parseColor("#FFF0F4F9"),
-                    Color.parseColor("#FF1F1F1F"),
-                    Color.parseColor("#FF444746"),
-                    Color.parseColor("#FF747775"),
-                    Color.parseColor("#FF0B57D0"),
-                    Color.parseColor("#FFD3E3FD"),
-                    Color.parseColor("#FF041E49"),
-                    Color.parseColor("#140B57D0"));
+                    Color.parseColor("#FFEEF2FA"),
+                    Color.parseColor("#123855E0"),
+                    Color.parseColor("#143855E0"),
+                    Color.parseColor("#FFE0E8FD"),
+                    Color.parseColor("#FFFFF1DC"),
+                    Color.parseColor("#FFEEF2FA"),
+                    Color.parseColor("#FF131620"),
+                    Color.parseColor("#FF444857"),
+                    Color.parseColor("#FF8D91A0"),
+                    Color.parseColor("#FF3855E0"),
+                    Color.parseColor("#FFE0E5FF"),
+                    Color.parseColor("#FF0B1B6D"),
+                    Color.parseColor("#1F3855E0"));
         }
     }
 }
