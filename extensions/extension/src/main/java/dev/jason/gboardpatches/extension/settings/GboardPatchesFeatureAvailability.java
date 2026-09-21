@@ -55,6 +55,8 @@ public final class GboardPatchesFeatureAvailability {
             "dev.jason.gboardpatches.feature.manual_incognito";
     public static final String FEATURE_EMOJI_SIZE =
             "dev.jason.gboardpatches.feature.emoji_size";
+    public static final String FEATURE_CUSTOM_EMOJI_FONT =
+            "dev.jason.gboardpatches.feature.custom_emoji_font";
     public static final String FEATURE_CURSOR_TRACKPAD =
             "dev.jason.gboardpatches.feature.cursor_trackpad";
     public static final String FEATURE_ACCESS_POINTS_MENU_STYLE =

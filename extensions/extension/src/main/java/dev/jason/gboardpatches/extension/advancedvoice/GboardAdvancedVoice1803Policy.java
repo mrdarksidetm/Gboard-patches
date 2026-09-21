@@ -46,6 +46,18 @@ public final class GboardAdvancedVoice1803Policy {
         return Boolean.FALSE;
     }
 
+    public static Object maybeEnableUniversalFormatter(
+            Locale locale,
+            boolean stockAdvancedFeaturesDisabled,
+            Object originalFormatterDisabled) {
+        if (locale == null
+                || stockAdvancedFeaturesDisabled
+                || !Boolean.TRUE.equals(originalFormatterDisabled)) {
+            return originalFormatterDisabled;
+        }
+        return Boolean.FALSE;
+    }
+
     private static boolean isAdvancedVoiceFlag(String flagName) {
         return ENABLE_NGA_FLAG.equals(flagName)
                 || ENABLE_ADVANCED_FEATURES_FLAG.equals(flagName)

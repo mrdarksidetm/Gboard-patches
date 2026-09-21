@@ -10,6 +10,7 @@ import dev.jason.gboardpatches.extension.accessibilitylayout.GboardAccessibility
 import dev.jason.gboardpatches.extension.accesspointcount.GboardAccessPointCountSettingsFeature;
 import dev.jason.gboardpatches.extension.accesspointsmenu.GboardAccessPointsMenuSettingsFeature;
 import dev.jason.gboardpatches.extension.closeproactivesuggestions.GboardCloseProactiveSuggestionsSettingsFeature;
+import dev.jason.gboardpatches.extension.emojifont.GboardEmojiFontSettingsFeature;
 import dev.jason.gboardpatches.extension.emojisize.GboardEmojiSizeSettingsFeature;
 import dev.jason.gboardpatches.extension.flowmode.GboardFlowModeSettingsFeature;
 import dev.jason.gboardpatches.extension.roundedkeyboard.GboardRoundedKeyboardSettingsFeature;
@@ -47,6 +48,7 @@ public final class GboardKeyboardLayoutSettingsGroupFeature
                         new GboardZhuyinBottomRowWeightSettingsFeature(context),
                         new GboardSymbolFooterOrderSettingsFeature(context),
                         new GboardEmojiSizeSettingsFeature(context),
+                        new GboardEmojiFontSettingsFeature(context),
                         new GboardAccessPointsMenuSettingsFeature(context),
                         new GboardSplitKeyboardSettingsFeature(context),
                         new GboardAccessibilityLayoutSettingsFeature(context),

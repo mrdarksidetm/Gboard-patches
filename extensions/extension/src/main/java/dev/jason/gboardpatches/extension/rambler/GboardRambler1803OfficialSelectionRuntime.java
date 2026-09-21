@@ -4,6 +4,8 @@ import android.content.Context;
 
 import java.lang.reflect.Method;
 
+import dev.jason.gboardpatches.extension.advancedvoice.GboardAdvancedVoice1803RuntimeSettings;
+
 /** Keeps Agentic capability exposure aligned with Gboard's official selector. */
 public final class GboardRambler1803OfficialSelectionRuntime {
     private static final ThreadLocal<Integer> VOICE_SETTINGS_SCOPE_DEPTH =
@@ -17,11 +19,14 @@ public final class GboardRambler1803OfficialSelectionRuntime {
     }
 
     public static boolean shouldEnableAgenticDictation() {
-        if (isDefaultSelectionSuppressed()) {
-            return false;
-        }
         if (isVoiceSettingsScopeActive()) {
             return true;
+        }
+        if (GboardAdvancedVoice1803RuntimeSettings.isRamblerEnabled()) {
+            return true;
+        }
+        if (isDefaultSelectionSuppressed()) {
+            return false;
         }
         Boolean selected = officialRamblerSelected;
         if (selected == null) {

@@ -16,9 +16,9 @@ public final class GboardAdvancedVoiceSettings {
             "pref_advanced_voice_zh_tw_punctuation_enabled";
     public static final String BACKEND_ADVANCED = "advanced";
     public static final String BACKEND_RAMBLER = "rambler";
-    public static final boolean DEFAULT_ENABLED = false;
-    public static final String DEFAULT_BACKEND = BACKEND_ADVANCED;
-    public static final boolean DEFAULT_ZH_TW_PUNCTUATION_ENABLED = false;
+    public static final boolean DEFAULT_ENABLED = true;
+    public static final String DEFAULT_BACKEND = BACKEND_RAMBLER;
+    public static final boolean DEFAULT_ZH_TW_PUNCTUATION_ENABLED = true;
 
     private GboardAdvancedVoiceSettings() {
     }
@@ -70,7 +70,7 @@ public final class GboardAdvancedVoiceSettings {
             return DEFAULT_BACKEND;
         }
         Object raw = preferences.getAll().get(PREF_KEY_BACKEND);
-        return BACKEND_RAMBLER.equals(raw) ? BACKEND_RAMBLER : BACKEND_ADVANCED;
+        return BACKEND_ADVANCED.equals(raw) ? BACKEND_ADVANCED : BACKEND_RAMBLER;
     }
 
     public static boolean writeEnabled(Context context, boolean enabled) {

@@ -36,6 +36,8 @@ import dev.jason.gboardpatches.patches.gboard.features.cursortrackpad.gboardCurs
 import dev.jason.gboardpatches.patches.gboard.features.cursortrackpad.gboardCursorTrackpadFlagValuePatch
 import dev.jason.gboardpatches.patches.gboard.features.emojisize.gboardEmojiSizeFeatureMarkerPatch
 import dev.jason.gboardpatches.patches.gboard.features.emojisize.gboardEmojiSizeFlagValuePatch
+import dev.jason.gboardpatches.patches.gboard.features.emojifont.gboardEmojiFontFeatureMarkerPatch
+import dev.jason.gboardpatches.patches.gboard.features.emojifont.gboardEmojiFontPatch
 import dev.jason.gboardpatches.patches.gboard.features.webclipboard.gboardWebClipboardAssetsPatch
 import dev.jason.gboardpatches.patches.gboard.features.webclipboard.gboardWebClipboardCapturePatch
 import dev.jason.gboardpatches.patches.gboard.features.webclipboard.gboardWebClipboardFeatureMarkerPatch
@@ -275,6 +277,23 @@ val gboardEmojiSizePatch = gboardPublicResourcePatch(
         gboardPatchesSettingsPatch,
         gboardEmojiSizeFeatureMarkerPatch,
         gboardEmojiSizeFlagValuePatch,
+    )
+}
+
+@Suppress("unused")
+val gboardCustomEmojiFontPatch = gboardPublicResourcePatch(
+    featureId = "custom_emoji_font",
+    name = "Custom Emoji Font (.ttf)",
+    description = "支援載入自訂 Emoji TTF 字型檔案\n" +
+        "Load and use a custom TrueType emoji font file (.ttf) directly in Gboard.",
+    default = true,
+) {
+    compatibleWith(COMPATIBILITY_GBOARD)
+
+    dependsOn(
+        gboardPatchesSettingsPatch,
+        gboardEmojiFontFeatureMarkerPatch,
+        gboardEmojiFontPatch,
     )
 }
 
@@ -809,6 +828,7 @@ object GboardPublishedPatchCatalog {
         gboardAdvancedVoiceTypingPatch,
         gboardBluetoothMicrophonePatch,
         gboardEmojiSizePatch,
+        gboardCustomEmojiFontPatch,
         gboardCursorTrackpadPatch,
         gboardAccessPointsMenuStylePatch,
         gboardSplitKeyboardPatch,

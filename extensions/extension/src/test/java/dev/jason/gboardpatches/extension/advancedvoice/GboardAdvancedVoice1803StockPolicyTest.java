@@ -19,6 +19,21 @@ public final class GboardAdvancedVoice1803StockPolicyTest {
                     GboardAdvancedVoice1803StockPolicy.maybeForceStockFlag(
                             flag, Boolean.FALSE));
         }
+
+        String[] additionalFlags = new String[] {
+                GboardAdvancedVoice1803StockPolicy.ENABLE_SMART_DICTATION_FLAG,
+                GboardAdvancedVoice1803StockPolicy.ENABLE_ASSISTANT_VOICE_TYPING_FLAG,
+                GboardAdvancedVoice1803StockPolicy.ENABLE_SPEECH_ENHANCEMENT_FLAG,
+                GboardAdvancedVoice1803StockPolicy.ENABLE_VOICE_COMMANDS_FLAG,
+                GboardAdvancedVoice1803StockPolicy.ENABLE_VOICE_ELICIT_FLAG,
+                GboardAdvancedVoice1803StockPolicy.ENABLE_WRITING_TOOLS_USE_THIS_FOR_SMART_DICTATION_FLAG
+        };
+        for (String flag : additionalFlags) {
+            Assert.assertSame(Boolean.TRUE,
+                    GboardAdvancedVoice1803StockPolicy.maybeForceStockFlag(
+                            flag, Boolean.FALSE));
+        }
+
         Object wrongType = "false";
         Assert.assertSame(wrongType,
                 GboardAdvancedVoice1803StockPolicy.maybeForceStockFlag(

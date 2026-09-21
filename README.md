@@ -1,18 +1,14 @@
 <h1 align="center">Gboard Patches</h1>
 
 <p align="center">
-  Morphe patches for Gboard with a mix of global improvements and Taiwan-focused enhancements.
+  Morphe patches for Gboard with Custom Emoji TTF font support, global usability improvements, and Taiwan-focused enhancements.
 </p>
 
 <p align="center">
-  <a href="https://github.com/jasonwu1994/Gboard-patches/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/jasonwu1994/Gboard-patches?display_name=tag&label=Release&style=for-the-badge"></a>
-  <a href="https://github.com/jasonwu1994/Gboard-patches"><img alt="Total downloads" src="https://img.shields.io/github/downloads/jasonwu1994/Gboard-patches/total?label=Downloads&style=for-the-badge"></a>
-  <a href="https://morphe.software/add-source?github=jasonwu1994/Gboard-patches"><img alt="Add to Morphe" src="https://img.shields.io/badge/Morphe-Add%20Source-00A8FF?style=for-the-badge"></a>
-  <a href="https://github.com/jasonwu1994/Gboard-patches"><img alt="GitHub stars" src="https://img.shields.io/github/stars/jasonwu1994/Gboard-patches?style=social"></a>
-</p>
-
-<p align="center">
-  <a href="https://ko-fi.com/jasonwu1994"><img height="40" alt="Buy me a coffee on Ko-fi" src="https://storage.ko-fi.com/cdn/kofi5.png?v=3"></a>
+  <a href="https://github.com/mrdarksidetm/Gboard-patches/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/mrdarksidetm/Gboard-patches?display_name=tag&label=Release&style=for-the-badge"></a>
+  <a href="https://github.com/mrdarksidetm/Gboard-patches"><img alt="Total downloads" src="https://img.shields.io/github/downloads/mrdarksidetm/Gboard-patches/total?label=Downloads&style=for-the-badge"></a>
+  <a href="https://morphe.software/add-source?github=mrdarksidetm/Gboard-patches"><img alt="Add to Morphe" src="https://img.shields.io/badge/Morphe-Add%20Source-00A8FF?style=for-the-badge"></a>
+  <a href="https://github.com/mrdarksidetm/Gboard-patches"><img alt="GitHub stars" src="https://img.shields.io/github/stars/mrdarksidetm/Gboard-patches?style=social"></a>
 </p>
 
 ## Overview
@@ -24,6 +20,12 @@ Gboard Patches is a public Morphe source for a curated set of Gboard enhancement
 ### Project-Built Features
 
 Features designed and built by this project rather than simply unlocking an existing Gboard flag.
+
+<details>
+  <summary><code>Custom Emoji Font (.ttf)</code></summary>
+
+  Import and use any custom TrueType or OpenType emoji font file (<code>.ttf</code> / <code>.otf</code>) directly within Gboard (e.g. Google Emoji 3D, iOS Emojis, Fluent, Twemoji, JoyPixels) without needing root, Magisk, or system partition modification. Includes an in-app file picker, real-time emoji preview card, and instant reset.
+</details>
 
 <details>
   <summary><code>Clipboard Enhancements</code></summary>
@@ -122,15 +124,21 @@ Customize the bottom tab order in Gboard's Emojis, stickers & GIFs panel with dr
 Features already present in Gboard that are exposed by enabling hidden settings, rollout gates, or built-in behavior.
 
 <details>
-  <summary><code>AI Writing Tools</code></summary>
+  <summary><code>AI Writing Tools (Persistent &amp; Universal)</code></summary>
 
-  Enables the <code>Text correction &gt; Writing tools</code> setting with support for all languages.
+  Enables the <code>Text correction &gt; Writing tools</code> setting with proofreading, tone stylization, and universal language support including English (US), English (India), and all system languages. Includes anti-suppression overrides preventing Phenotype experiments from hiding toolbar icons or candidate bar chips.
 </details>
 
 <details>
-  <summary><code>Advanced Voice Typing</code></summary>
+  <summary><code>Advanced Voice Typing &amp; Rambler Dictation (English US &amp; India Focused)</code></summary>
 
-  Enable Advanced Voice Typing with automatic punctuation, and separately enable automatic punctuation for Traditional Chinese voice typing, which does not support Advanced Voice Typing.
+  Enables Advanced Voice Typing and Agentic Dictation (Rambler mode) by default with floating toolbar at cursor position. Optimized specifically for **English (US)** and **English (India)** with automatic punctuation and native split readiness. Features hardened flag persistence that prevents background Phenotype sync from resetting or silently disabling dictation settings.
+</details>
+
+<details>
+  <summary><code>Autonomous Upstream Synchronization Engine</code></summary>
+
+  Automated CI/CD workflow running daily on GitHub Actions to fetch updates from upstream (<code>jasonwu1994/Gboard-patches</code>), verify custom feature invariants (Custom Emoji TTF, English US/India Rambler, AI Writing Tools persistence, credits), execute test suites remotely, and auto-merge safely into <code>main</code> without manual intervention.
 </details>
 
 <details>
@@ -279,8 +287,8 @@ Features tailored to Traditional Chinese and Zhuyin input workflows.
 
 Add this repository as a Morphe source:
 
-- [Open in Morphe](https://morphe.software/add-source?github=jasonwu1994/Gboard-patches)
-- Or manually add `https://github.com/jasonwu1994/Gboard-patches`
+- [Open in Morphe](https://morphe.software/add-source?github=mrdarksidetm/Gboard-patches)
+- Or manually add `https://github.com/mrdarksidetm/Gboard-patches`
 
 ## Build
 
@@ -306,6 +314,12 @@ Generated outputs:
 - `patches/build/libs/*.mpp`
 - `patches-list.json`
 - `patches-bundle.json`
+
+## Credits & Attribution
+
+- **Fork Maintainer & Feature Developer:** [@mrdarksidetm](https://github.com/mrdarksidetm) — Custom Emoji TTF font engine, English US/India Rambler & Voice persistence, AI Writing tools hardening, Autonomous Upstream Sync Engine, live emoji preview, and fork maintenance.
+- **Original Author & Upstream Base:** [@jasonwu1994](https://github.com/jasonwu1994) — Creator of the original [Gboard-patches](https://github.com/jasonwu1994/Gboard-patches) project.
+- **Patcher Ecosystem:** [Morphe](https://morphe.software) — Modern bytecode patching framework for Android apps.
 
 ## License
 

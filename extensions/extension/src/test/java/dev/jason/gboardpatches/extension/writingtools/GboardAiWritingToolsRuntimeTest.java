@@ -57,6 +57,27 @@ public final class GboardAiWritingToolsRuntimeTest {
                 Boolean.FALSE,
                 settings,
                 writingToolsOff));
+        String[] persistentToolbarFlags = new String[]{
+                GboardAiWritingToolsRuntime.FLAG_WRITING_HELPER_ENABLE_ON_TOOLBAR,
+                GboardAiWritingToolsRuntime.FLAG_WRITING_HELPER_CHIP_SHOWN_AS_CANDIDATE,
+                GboardAiWritingToolsRuntime.FLAG_WRITING_HELPER_CHIP_IN_SPELLCHECKER,
+                GboardAiWritingToolsRuntime.FLAG_ENABLE_WRITING_TOOLS_USE_THIS_FOR_SMART_DICTATION,
+                GboardAiWritingToolsRuntime.FLAG_WRITING_HELPER_ENABLE_ACCESS_POINT_ANIMATION,
+                GboardAiWritingToolsRuntime.FLAG_WRITING_HELPER_ENABLE_BY_WORD_REVERT,
+                GboardAiWritingToolsRuntime.FLAG_WRITING_HELPER_ENABLE_FREE_CHAT,
+                GboardAiWritingToolsRuntime
+                        .FLAG_WRITING_HELPER_ENABLE_PARTIAL_SELECTION_ON_LONG_INPUT,
+                GboardAiWritingToolsRuntime.FLAG_ENABLE_WRITING_TOOLS_LOG_WITH_PROOFREAD,
+                GboardAiWritingToolsRuntime.FLAG_ENABLE_WRITING_TOOLS_THUMB_UP_AND_DOWN
+        };
+        for (String flag : persistentToolbarFlags) {
+            Assert.assertSame(flag, Boolean.TRUE,
+                    GboardAiWritingToolsRuntime.computeOverrideValue(
+                            flag,
+                            Boolean.FALSE,
+                            settings,
+                            writingToolsOff));
+        }
     }
 
     @Test
@@ -94,16 +115,20 @@ public final class GboardAiWritingToolsRuntimeTest {
     @Test
     public void allKeyboardsChangesOnlyTwoStringAllowlists() {
         GboardAiWritingToolsSettings.Snapshot enabled = serverSettings(true);
-        Assert.assertEquals("*", GboardAiWritingToolsRuntime.computeOverrideValue(
-                GboardAiWritingToolsRuntime.FLAG_WRITING_HELPER_SUPPORTED_LANGUAGE_TAGS,
-                "en-US",
-                enabled,
-                official(true, true)));
-        Assert.assertEquals("*", GboardAiWritingToolsRuntime.computeOverrideValue(
-                GboardAiWritingToolsRuntime.FLAG_LLM_PC_SUPPORTED_LANGUAGE_TAGS,
-                "en-US",
-                enabled,
-                official(true, true)));
+        Assert.assertEquals(
+                GboardAiWritingToolsRuntime.ALL_LANGUAGES_ALLOWLIST_VALUE,
+                GboardAiWritingToolsRuntime.computeOverrideValue(
+                        GboardAiWritingToolsRuntime.FLAG_WRITING_HELPER_SUPPORTED_LANGUAGE_TAGS,
+                        "en-US",
+                        enabled,
+                        official(true, true)));
+        Assert.assertEquals(
+                GboardAiWritingToolsRuntime.ALL_LANGUAGES_ALLOWLIST_VALUE,
+                GboardAiWritingToolsRuntime.computeOverrideValue(
+                        GboardAiWritingToolsRuntime.FLAG_LLM_PC_SUPPORTED_LANGUAGE_TAGS,
+                        "en-US",
+                        enabled,
+                        official(true, true)));
 
         Object wrongType = Integer.valueOf(7);
         Assert.assertSame(wrongType, GboardAiWritingToolsRuntime.computeOverrideValue(

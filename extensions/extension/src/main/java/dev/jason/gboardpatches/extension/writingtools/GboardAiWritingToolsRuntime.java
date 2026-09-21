@@ -37,9 +37,66 @@ public final class GboardAiWritingToolsRuntime {
             "enable_writing_tools_voice_commands";
     static final String FLAG_ENABLE_MODELESS_SMART_EDIT =
             "enable_nga_lab_modeless_smartedit";
-    static final String FLAG_MODELESS_SMART_EDIT_REGEX_VERSION =
-            "nga_lab_modeless_smartedit_regex_version";
-    static final String ALL_LANGUAGES_ALLOWLIST_VALUE = "*";
+    static final String FLAG_ENABLE_WRITING_TOOLS_LOG_WITH_PROOFREAD =
+            "enable_writing_tools_log_with_proofread";
+    static final String FLAG_ENABLE_WRITING_TOOLS_THUMB_UP_AND_DOWN =
+            "enable_writing_tools_thumb_up_and_down";
+    static final String FLAG_ENABLE_WRITING_TOOLS_USE_THIS_FOR_SMART_DICTATION =
+            "enable_writing_tools_use_this_for_smart_dictation";
+    static final String FLAG_WRITING_HELPER_CHIP_IN_SPELLCHECKER =
+            "writing_helper_chip_in_spellchecker";
+    static final String FLAG_WRITING_HELPER_CHIP_SHOWN_AS_CANDIDATE =
+            "writing_helper_chip_shown_as_candidate";
+    static final String FLAG_WRITING_HELPER_ENABLE_ACCESS_POINT_ANIMATION =
+            "writing_helper_enable_access_point_animation";
+    static final String FLAG_WRITING_HELPER_ENABLE_BY_WORD_REVERT =
+            "writing_helper_enable_by_word_revert";
+    static final String FLAG_WRITING_HELPER_ENABLE_FREE_CHAT =
+            "writing_helper_enable_free_chat";
+    static final String FLAG_WRITING_HELPER_ENABLE_ON_TOOLBAR =
+            "writing_helper_enable_on_toolbar";
+    static final String FLAG_WRITING_HELPER_ENABLE_PARTIAL_SELECTION_ON_LONG_INPUT =
+            "writing_helper_enable_partial_selection_on_long_input";
+    static final String UNIVERSAL_LANGUAGE_TAGS_ALLOWLIST =
+            "*,"
+            + "en-US,en,en-GB,en-CA,en-AU,en-IN,en-NZ,en-SG,en-ZA,"
+            + "zh-CN,zh-TW,zh-HK,zh,"
+            + "hi-IN,hi,"
+            + "es-ES,es-US,es-MX,es-419,es,"
+            + "fr-FR,fr-CA,fr,"
+            + "ar-SA,ar-AE,ar-EG,ar,"
+            + "bn-BD,bn-IN,bn,"
+            + "ru-RU,ru,"
+            + "pt-BR,pt-PT,pt,"
+            + "id-ID,id,"
+            + "de-DE,de-AT,de-CH,de,"
+            + "ja-JP,ja,"
+            + "ur-PK,ur-IN,ur,"
+            + "mr-IN,mr,"
+            + "te-IN,te,"
+            + "tr-TR,tr,"
+            + "ta-IN,ta-LK,ta-SG,ta,"
+            + "vi-VN,vi,"
+            + "ko-KR,ko,"
+            + "it-IT,it,"
+            + "fa-IR,fa,"
+            + "pl-PL,pl,"
+            + "nl-NL,nl-BE,nl,"
+            + "uk-UA,uk,"
+            + "th-TH,th,"
+            + "ro-RO,ro,"
+            + "el-GR,el,"
+            + "cs-CZ,cs,"
+            + "hu-HU,hu,"
+            + "sv-SE,sv,"
+            + "da-DK,da,"
+            + "fi-FI,fi,"
+            + "nb-NO,nn-NO,no,"
+            + "he-IL,he,iw,"
+            + "ms-MY,ms,"
+            + "fil-PH,fil,tl,"
+            + "gu-IN,gu,kn-IN,kn,ml-IN,ml,pa-IN,pa";
+    static final String ALL_LANGUAGES_ALLOWLIST_VALUE = UNIVERSAL_LANGUAGE_TAGS_ALLOWLIST;
     static final String MODELESS_SMART_EDIT_REGEX_VERSION = "v3";
     static final String RENAMED_GBOARD_PACKAGE =
             "dev.jason.com.google.android.inputmethod.latin";
@@ -158,7 +215,8 @@ public final class GboardAiWritingToolsRuntime {
 
         if (FLAG_WRITING_HELPER_SUPPORTED_LANGUAGE_TAGS.equals(flagName)
                 || FLAG_LLM_PC_SUPPORTED_LANGUAGE_TAGS.equals(flagName)) {
-            return settings.allKeyboardsEnabled && originalResult instanceof String
+            return (settings.allKeyboardsEnabled || settings.featureEnabled)
+                    && originalResult instanceof String
                     ? ALL_LANGUAGES_ALLOWLIST_VALUE
                     : originalResult;
         }
@@ -173,7 +231,17 @@ public final class GboardAiWritingToolsRuntime {
                 || FLAG_WRITING_HELPER_ENABLE_TEXT_STYLIZATION_INTERNAL.equals(flagName)
                 || FLAG_WRITING_HELPER.equals(flagName)
                 || FLAG_ENABLE_WRITING_TOOLS_FOR_MINORS.equals(flagName)
-                || FLAG_ENABLE_MODELESS_SMART_EDIT.equals(flagName)) {
+                || FLAG_ENABLE_MODELESS_SMART_EDIT.equals(flagName)
+                || FLAG_ENABLE_WRITING_TOOLS_LOG_WITH_PROOFREAD.equals(flagName)
+                || FLAG_ENABLE_WRITING_TOOLS_THUMB_UP_AND_DOWN.equals(flagName)
+                || FLAG_ENABLE_WRITING_TOOLS_USE_THIS_FOR_SMART_DICTATION.equals(flagName)
+                || FLAG_WRITING_HELPER_CHIP_IN_SPELLCHECKER.equals(flagName)
+                || FLAG_WRITING_HELPER_CHIP_SHOWN_AS_CANDIDATE.equals(flagName)
+                || FLAG_WRITING_HELPER_ENABLE_ACCESS_POINT_ANIMATION.equals(flagName)
+                || FLAG_WRITING_HELPER_ENABLE_BY_WORD_REVERT.equals(flagName)
+                || FLAG_WRITING_HELPER_ENABLE_FREE_CHAT.equals(flagName)
+                || FLAG_WRITING_HELPER_ENABLE_ON_TOOLBAR.equals(flagName)
+                || FLAG_WRITING_HELPER_ENABLE_PARTIAL_SELECTION_ON_LONG_INPUT.equals(flagName)) {
             return Boolean.TRUE;
         }
         return originalResult;

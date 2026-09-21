@@ -51,6 +51,7 @@ internal enum class RuntimeCallId(internal val encodedAbi: String) {
     CURSOR_TRACKPAD_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE("Ldev/jason/gboardpatches/extension/cursortrackpad/GboardCursorTrackpad1803Runtime;->applyOverriddenFlagValue(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;"),
     DEVICE_INTELLIGENCE_RUNTIME_APPLY_FLAG_VALUE("Ldev/jason/gboardpatches/extension/featureflags/GboardFeatureFlagsRuntime;->applyDeviceIntelligenceFlagValue(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;"),
     EMOJI_SIZE_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE("Ldev/jason/gboardpatches/extension/emojisize/GboardEmojiSize1803Runtime;->applyOverriddenFlagValue(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;"),
+    EMOJI_FONT_RUNTIME_AFTER_SOFT_KEY_BOUND("Ldev/jason/gboardpatches/extension/emojifont/GboardEmojiFontRuntime;->afterSoftKeyBound(Ljava/lang/Object;Ljava/lang/Object;)V"),
     FEATURE_FLAGS_RUNTIME_APPLY_OVERRIDDEN_FLAG_VALUE("Ldev/jason/gboardpatches/extension/featureflags/GboardFeatureFlagsRuntime;->applyOverriddenFlagValue(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;"),
     FLOW_MODE_RUNTIME_APPLY_FLAG_VALUE("Ldev/jason/gboardpatches/extension/flowmode/GboardFlowModeRuntime;->applyFlagValue(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;"),
     FLOW_MODE_RUNTIME_MAP_KEY_CODE("Ldev/jason/gboardpatches/extension/flowmode/GboardFlowModeRuntime;->mapKeyCode(I)I"),

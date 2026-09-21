@@ -18,6 +18,18 @@ public final class GboardAdvancedVoice1803StockPolicy {
             "enable_sticky_mic_background";
     public static final String ENABLE_SODA_LONGFORM_EXPERIMENT_FLAG =
             "enable_soda_longform_experiment";
+    public static final String ENABLE_SMART_DICTATION_FLAG =
+            "enable_smart_dictation";
+    public static final String ENABLE_ASSISTANT_VOICE_TYPING_FLAG =
+            "enable_assistant_voice_typing";
+    public static final String ENABLE_SPEECH_ENHANCEMENT_FLAG =
+            "enable_speech_enhancement";
+    public static final String ENABLE_VOICE_COMMANDS_FLAG =
+            "enable_voice_commands";
+    public static final String ENABLE_VOICE_ELICIT_FLAG =
+            "enable_voice_elicit";
+    public static final String ENABLE_WRITING_TOOLS_USE_THIS_FOR_SMART_DICTATION_FLAG =
+            "enable_writing_tools_use_this_for_smart_dictation";
 
     private static final Set<String> STOCK_FLAGS = Collections.unmodifiableSet(
             new HashSet<String>(Arrays.asList(
@@ -26,7 +38,13 @@ public final class GboardAdvancedVoice1803StockPolicy {
                     ENABLE_DICTATION_SPLIT_INSTALL_FLAG,
                     HANDLE_FALLBACK_INSIDE_SD_STACK_FLAG,
                     ENABLE_STICKY_MIC_BACKGROUND_FLAG,
-                    ENABLE_SODA_LONGFORM_EXPERIMENT_FLAG)));
+                    ENABLE_SODA_LONGFORM_EXPERIMENT_FLAG,
+                    ENABLE_SMART_DICTATION_FLAG,
+                    ENABLE_ASSISTANT_VOICE_TYPING_FLAG,
+                    ENABLE_SPEECH_ENHANCEMENT_FLAG,
+                    ENABLE_VOICE_COMMANDS_FLAG,
+                    ENABLE_VOICE_ELICIT_FLAG,
+                    ENABLE_WRITING_TOOLS_USE_THIS_FOR_SMART_DICTATION_FLAG)));
 
     private GboardAdvancedVoice1803StockPolicy() {
     }

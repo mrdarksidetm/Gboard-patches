@@ -535,7 +535,8 @@ public final class GboardAddSymbolsRuntime {
             } else if (view instanceof TextView textView) {
                 textView.setContentDescription(symbol);
                 textView.setIncludeFontPadding(false);
-                textView.setTypeface(Typeface.DEFAULT);
+                Typeface customEmojiFont = dev.jason.gboardpatches.extension.emojifont.GboardEmojiFontRuntime.getCustomEmojiTypefaceOrNull(textView.getContext());
+                textView.setTypeface(customEmojiFont != null ? customEmojiFont : Typeface.DEFAULT);
                 textView.setAllCaps(false);
                 textView.setGravity(android.view.Gravity.CENTER);
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -1882,7 +1883,8 @@ public final class GboardAddSymbolsRuntime {
 
         CustomEmoticonGlyphView(Context context) {
             super(context);
-            paint.setTypeface(Typeface.DEFAULT);
+            Typeface customEmojiFont = dev.jason.gboardpatches.extension.emojifont.GboardEmojiFontRuntime.getCustomEmojiTypefaceOrNull(context);
+            paint.setTypeface(customEmojiFont != null ? customEmojiFont : Typeface.DEFAULT);
             paint.setTextAlign(Paint.Align.LEFT);
             paint.setTextScaleX(CUSTOM_EMOTICON_ITEM_GLYPH_TEXT_SCALE_X);
             textColors = resolveCustomEmoticonTextColors(context);
@@ -1895,6 +1897,8 @@ public final class GboardAddSymbolsRuntime {
                 markGlyphLayoutDirty();
             }
             applyResolvedGlyphColor();
+            Typeface customEmojiFont = dev.jason.gboardpatches.extension.emojifont.GboardEmojiFontRuntime.getCustomEmojiTypefaceOrNull(getContext());
+            paint.setTypeface(customEmojiFont != null ? customEmojiFont : Typeface.DEFAULT);
             paint.setTextScaleX(CUSTOM_EMOTICON_ITEM_GLYPH_TEXT_SCALE_X);
             setContentDescription(value);
             invalidate();

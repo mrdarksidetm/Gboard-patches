@@ -7,6 +7,7 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -153,27 +154,32 @@ public final class GboardAdvancedVoice1803Runtime {
             if (promoted) {
                 logInfo("promoted scn#a() after dictation_jni load succeeded");
             }
-            return promoted;
+            return true;
         } catch (Throwable failure) {
             logError("18.0.3 native split readiness check failed", failure);
-            return stockResult;
+            return true;
         }
     }
 
     public static Object includeExactZhTwSupportedLocale(Object stockLocales) {
-        if (!GboardAdvancedVoice1803RuntimeSettings
-                .isZhTwPunctuationInterventionEnabled()
-                || !(stockLocales instanceof Set<?>)) {
+        if (!(stockLocales instanceof Set<?>)) {
             return stockLocales;
         }
-        Locale zhTw = Locale.forLanguageTag("zh-TW");
         Set<?> stock = (Set<?>) stockLocales;
-        if (stock.contains(zhTw)) {
-            return stockLocales;
+        if (!GboardAdvancedVoice1803RuntimeSettings.isEnabled()) {
+            if (!GboardAdvancedVoice1803RuntimeSettings
+                    .isZhTwPunctuationInterventionEnabled()) {
+                return stockLocales;
+            }
+            Locale zhTw = Locale.forLanguageTag("zh-TW");
+            if (stock.contains(zhTw)) {
+                return stockLocales;
+            }
+            LinkedHashSet<Object> expanded = new LinkedHashSet<Object>(stock);
+            expanded.add(zhTw);
+            return expanded;
         }
-        LinkedHashSet<Object> expanded = new LinkedHashSet<Object>(stock);
-        expanded.add(zhTw);
-        return expanded;
+        return new UniversalSupportedLocaleSet(stock);
     }
 
     public static boolean beforeFormatterConstructed(
@@ -181,8 +187,7 @@ public final class GboardAdvancedVoice1803Runtime {
             Object orationContext,
             boolean formatterDisabled) {
         if (!formatterDisabled
-                || !GboardAdvancedVoice1803RuntimeSettings
-                        .isZhTwPunctuationInterventionEnabled()) {
+                || !GboardAdvancedVoice1803RuntimeSettings.isEnabled()) {
             return formatterDisabled;
         }
         try {
@@ -197,12 +202,13 @@ public final class GboardAdvancedVoice1803Runtime {
                     handles.orationConfigurationField,
                     handles.defaultConfigurationField,
                     handles.disableAdvancedFeaturesField)) {
-                logInfo("enabled stock formatter locale=zh-TW");
+                logInfo("enabled stock formatter locale="
+                        + (locale != null ? locale.toLanguageTag() : "all"));
             }
             return ((Boolean) args[4]).booleanValue();
         } catch (Throwable failure) {
-            logError("zh-TW formatter gate failed", failure);
-            return formatterDisabled;
+            logError("universal formatter gate failed", failure);
+            return false;
         }
     }
 
@@ -316,7 +322,7 @@ public final class GboardAdvancedVoice1803Runtime {
                 disableAdvancedFeaturesField.getBoolean(configurationData);
         Object originalFormatterDisabled = args[4];
         Object enforcedFormatterDisabled =
-                GboardAdvancedVoice1803Policy.maybeEnableExactZhTwFormatter(
+                GboardAdvancedVoice1803Policy.maybeEnableUniversalFormatter(
                         locale,
                         stockAdvancedFeaturesDisabled,
                         originalFormatterDisabled);
@@ -326,6 +332,39 @@ public final class GboardAdvancedVoice1803Runtime {
         }
         args[4] = Boolean.FALSE;
         return true;
+    }
+
+    public static final class UniversalSupportedLocaleSet extends LinkedHashSet<Object> {
+        private static final long serialVersionUID = 1L;
+
+        public UniversalSupportedLocaleSet(Set<?> delegate) {
+            super(delegate != null ? delegate : Collections.emptySet());
+            Locale enUs = Locale.US;
+            Locale enIn = Locale.forLanguageTag("en-IN");
+            Locale zhTw = Locale.forLanguageTag("zh-TW");
+            if (!super.contains(enUs)) {
+                add(enUs);
+            }
+            if (!super.contains(enIn)) {
+                add(enIn);
+            }
+            if (!super.contains(zhTw)) {
+                add(zhTw);
+            }
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            if (o instanceof Locale || o instanceof String) {
+                return true;
+            }
+            return super.contains(o);
+        }
+
+        @Override
+        public boolean containsAll(java.util.Collection<?> c) {
+            return true;
+        }
     }
 
     static boolean maybeRestoreInitialVoiceSettings(

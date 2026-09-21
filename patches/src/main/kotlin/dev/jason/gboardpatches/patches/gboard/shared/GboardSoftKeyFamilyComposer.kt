@@ -94,6 +94,13 @@ internal enum class GboardSoftKeyFamilyFeature(
             RuntimeCallId.ZHUYIN_BOTTOM_ROW_WEIGHT_RUNTIME_AFTER_SOFT_KEY_BOUND,
         ),
     ),
+    CUSTOM_EMOJI_FONT(
+        beforeOrder = null,
+        afterOrder = 500,
+        afterRuntimeCalls = listOf(
+            RuntimeCallId.EMOJI_FONT_RUNTIME_AFTER_SOFT_KEY_BOUND,
+        ),
+    ),
     ;
 
     val runtimeCalls: List<RuntimeCallId>
@@ -349,8 +356,9 @@ internal fun GboardSoftKeyFamilyFeature.beforeDelegate(): String = when (this) {
 }
 
 internal fun GboardSoftKeyFamilyFeature.afterDelegate(): String = when (this) {
-    GboardSoftKeyFamilyFeature.SPACEBAR_LOGO ->
-        emitSoftKeyRuntimeCall(afterRuntimeCalls.single(), "p0, p1")
+    GboardSoftKeyFamilyFeature.SPACEBAR_LOGO,
+    GboardSoftKeyFamilyFeature.CUSTOM_EMOJI_FONT,
+    -> emitSoftKeyRuntimeCall(afterRuntimeCalls.single(), "p0, p1")
     GboardSoftKeyFamilyFeature.TOP_ROW_SWIPE,
     GboardSoftKeyFamilyFeature.ZHUYIN_BOTTOM_ROW,
     GboardSoftKeyFamilyFeature.ZHUYIN_TOGGLE,

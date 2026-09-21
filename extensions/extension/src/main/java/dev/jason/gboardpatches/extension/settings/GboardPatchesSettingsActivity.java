@@ -118,12 +118,12 @@ public final class GboardPatchesSettingsActivity extends Activity
     private static final int REQUEST_RUNTIME_PERMISSION = 0x4747;
     private static final int REQUEST_CREATE_BINARY_DOCUMENT = 0x4748;
     private static final int REQUEST_OPEN_BINARY_DOCUMENT = 0x4749;
-    private static final int TOOLBAR_HEIGHT_DP = 56;
+    private static final int TOOLBAR_HEIGHT_DP = 64;
     private static final int NO_SCROLL_POSITION_REQUESTED = -1;
     private static final String TOOLBAR_TITLE_PATCHES = "Patches";
-    private static final String ABOUT_AUTHOR_URL = "https://github.com/jasonwu1994";
+    private static final String ABOUT_AUTHOR_URL = "https://github.com/mrdarksidetm";
     private static final String ABOUT_PATCH_REPOSITORY_URL =
-            "https://github.com/jasonwu1994/Gboard-patches";
+            "https://github.com/mrdarksidetm/Gboard-patches";
     private static final String DOCUMENT_TYPE_FALLBACK = "text/plain";
     private static final String DOCUMENT_PICKER_FAILED = "Unable to open file picker.";
     private static final String DOCUMENT_WRITE_FAILED = "Failed to export file.";
@@ -133,6 +133,7 @@ public final class GboardPatchesSettingsActivity extends Activity
     private TextView toolbarTitleView;
     private View restartButton;
     private ObjectAnimator restartButtonAnimator;
+    private View headerCardView;
     private TextView headerBadgeView;
     private TextView headerTitleView;
     private TextView headerSummaryView;
@@ -1479,8 +1480,32 @@ public final class GboardPatchesSettingsActivity extends Activity
             getActionBar().hide();
         }
         Window window = getWindow();
+        boolean nightMode = (getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.setDecorFitsSystemWindows(false);
+            android.view.WindowInsetsController controller = window.getInsetsController();
+            if (controller != null) {
+                int appearance = nightMode ? 0 : (android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+                        | android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
+                controller.setSystemBarsAppearance(appearance,
+                        android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+                                | android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int flags = window.getDecorView().getSystemUiVisibility();
+            if (!nightMode) {
+                flags |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    flags |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+                }
+            } else {
+                flags &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    flags &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+                }
+            }
+            window.getDecorView().setSystemUiVisibility(flags);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.setStatusBarColor(palette.windowBackground);
@@ -1567,7 +1592,7 @@ public final class GboardPatchesSettingsActivity extends Activity
         toolbarTitleView = new TextView(this);
         toolbarTitleView.setTextColor(palette.textPrimary);
         toolbarTitleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
-        toolbarTitleView.setTypeface(Typeface.DEFAULT_BOLD);
+        toolbarTitleView.setTypeface(resolveGoogleSans(true));
         toolbarTitleView.setSingleLine(true);
         toolbarTitleView.setLayoutParams(new LinearLayout.LayoutParams(
                 0,
@@ -1602,7 +1627,7 @@ public final class GboardPatchesSettingsActivity extends Activity
                 float top = (getHeight() - iconSize) / 2f;
                 float scale = iconSize / 24f;
 
-                paint.setColor(palette.accent);
+                paint.setColor(palette.textPrimary);
                 path.reset();
                 path.moveTo(left + (4.48f * scale), top + (14.5f * scale));
                 path.cubicTo(
@@ -1837,23 +1862,31 @@ public final class GboardPatchesSettingsActivity extends Activity
     }
 
     private View buildHeaderCard() {
-        LinearLayout card = new LinearLayout(this);
+        headerCardView = new LinearLayout(this);
+        LinearLayout card = (LinearLayout) headerCardView;
         card.setOrientation(LinearLayout.VERTICAL);
         card.setBackground(buildCardDrawable(palette.surfaceAlt, palette.surfaceStroke, dp(24)));
-        card.setPadding(dp(20), dp(20), dp(20), dp(20));
-        card.setLayoutParams(new LinearLayout.LayoutParams(
+        card.setPadding(dp(20), dp(18), dp(20), dp(20));
+        LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        cardParams.bottomMargin = dp(8);
+        card.setLayoutParams(cardParams);
 
         headerBadgeView = new TextView(this);
-        headerBadgeView.setAllCaps(true);
-        headerBadgeView.setTextColor(palette.accent);
-        headerBadgeView.setTypeface(Typeface.DEFAULT_BOLD);
-        headerBadgeView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
+        headerBadgeView.setTextColor(palette.onAccentContainer);
+        headerBadgeView.setTypeface(resolveGoogleSans(true));
+        headerBadgeView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f);
+        headerBadgeView.setPadding(dp(10), dp(4), dp(10), dp(4));
+        headerBadgeView.setBackground(buildChipDrawable(palette.accentContainer, Color.TRANSPARENT));
+        LinearLayout.LayoutParams badgeParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        headerBadgeView.setLayoutParams(badgeParams);
 
         headerTitleView = new TextView(this);
         headerTitleView.setTextColor(palette.textPrimary);
-        headerTitleView.setTypeface(Typeface.DEFAULT_BOLD);
+        headerTitleView.setTypeface(resolveGoogleSans(true));
         headerTitleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
         LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -1863,8 +1896,9 @@ public final class GboardPatchesSettingsActivity extends Activity
 
         headerSummaryView = new TextView(this);
         headerSummaryView.setTextColor(palette.textSecondary);
+        headerSummaryView.setTypeface(resolveGoogleSans(false));
         headerSummaryView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
-        headerSummaryView.setLineSpacing(0f, 1.1f);
+        headerSummaryView.setLineSpacing(0f, 1.2f);
         LinearLayout.LayoutParams summaryParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -1880,16 +1914,11 @@ public final class GboardPatchesSettingsActivity extends Activity
     private View buildPanelCard() {
         panelContainer = new LinearLayout(this);
         panelContainer.setOrientation(LinearLayout.VERTICAL);
-        panelContainer.setBackground(buildCardDrawable(
-                palette.surface,
-                palette.surfaceStroke,
-                dp(28)));
         LinearLayout.LayoutParams panelParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        panelParams.topMargin = dp(12);
+        panelParams.topMargin = dp(4);
         panelContainer.setLayoutParams(panelParams);
-        panelContainer.setPadding(0, dp(6), 0, dp(6));
         return panelContainer;
     }
 
@@ -2542,10 +2571,20 @@ public final class GboardPatchesSettingsActivity extends Activity
     private void applyScreen(GboardPatchesSettingsContract.Screen screen) {
         toolbarTitleView.setText(screen.getToolbarTitle());
         headerBadgeView.setText(screen.getHeaderBadge());
+        headerBadgeView.setVisibility(
+                TextUtils.isEmpty(screen.getHeaderBadge()) ? View.GONE : View.VISIBLE);
         headerTitleView.setText(screen.getHeaderTitle());
+        headerTitleView.setVisibility(
+                TextUtils.isEmpty(screen.getHeaderTitle()) ? View.GONE : View.VISIBLE);
         headerSummaryView.setText(screen.getHeaderSummary());
         headerSummaryView.setVisibility(
                 TextUtils.isEmpty(screen.getHeaderSummary()) ? View.GONE : View.VISIBLE);
+        if (headerCardView != null) {
+            boolean hasHeader = !TextUtils.isEmpty(screen.getHeaderBadge())
+                    || !TextUtils.isEmpty(screen.getHeaderTitle())
+                    || !TextUtils.isEmpty(screen.getHeaderSummary());
+            headerCardView.setVisibility(hasHeader ? View.VISIBLE : View.GONE);
+        }
         applyPanelStyle(screen.getPanelStyle());
         panelContainer.removeAllViews();
         for (GboardPatchesSettingsContract.StatusBlock statusBlock : screen.getStatusBlocks()) {
@@ -2574,18 +2613,8 @@ public final class GboardPatchesSettingsActivity extends Activity
         if (panelContainer == null) {
             return;
         }
-        GboardPatchesSettingsContract.PanelStyle resolvedStyle =
-                panelStyle == null ? GboardPatchesSettingsContract.PanelStyle.CARD : panelStyle;
-        if (resolvedStyle == GboardPatchesSettingsContract.PanelStyle.FLAT) {
-            panelContainer.setBackground(null);
-            panelContainer.setPadding(0, 0, 0, 0);
-        } else {
-            panelContainer.setBackground(buildCardDrawable(
-                    palette.surface,
-                    palette.surfaceStroke,
-                    dp(28)));
-            panelContainer.setPadding(0, dp(6), 0, dp(6));
-        }
+        panelContainer.setBackground(null);
+        panelContainer.setPadding(0, 0, 0, 0);
     }
 
     private void openFeaturePath(GboardPatchesSettingsContract.Feature... featurePath) {
@@ -2697,6 +2726,7 @@ public final class GboardPatchesSettingsActivity extends Activity
         toolbarView = null;
         toolbarTitleView = null;
         restartButton = null;
+        headerCardView = null;
         headerBadgeView = null;
         headerTitleView = null;
         headerSummaryView = null;
@@ -2722,15 +2752,16 @@ public final class GboardPatchesSettingsActivity extends Activity
         titleView.setText(text(R.string.gboard_patches_fatal_fallback_title));
         titleView.setTextColor(palette.textPrimary);
         titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22f);
-        titleView.setTypeface(Typeface.DEFAULT_BOLD);
+        titleView.setTypeface(resolveGoogleSans(true));
         titleView.setGravity(Gravity.CENTER_HORIZONTAL);
 
         TextView summaryView = new TextView(this);
         summaryView.setText(text(R.string.gboard_patches_fatal_fallback_summary));
         summaryView.setTextColor(palette.textSecondary);
         summaryView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
+        summaryView.setTypeface(resolveGoogleSans(false));
         summaryView.setGravity(Gravity.CENTER_HORIZONTAL);
-        summaryView.setLineSpacing(0f, 1.15f);
+        summaryView.setLineSpacing(0f, 1.2f);
         LinearLayout.LayoutParams summaryParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -3113,38 +3144,82 @@ public final class GboardPatchesSettingsActivity extends Activity
     }
 
     private View createStatusBlockView(GboardPatchesSettingsContract.StatusBlock block) {
-        LinearLayout card = buildSectionContainer(false);
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
         card.setBackground(buildCardDrawable(
                 toneBackground(block.getTone()),
                 palette.surfaceStroke,
                 dp(20)));
-        card.addView(buildSectionTitle(block.getTitle()));
-        card.addView(buildSectionSummary(block.getSummary(), false));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            card.setClipToOutline(true);
+        }
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.topMargin = dp(12);
+        card.setLayoutParams(params);
+        card.setPadding(dp(20), dp(16), dp(20), dp(16));
+
+        TextView titleView = buildSectionTitle(block.getTitle());
+        titleView.setPadding(0, 0, 0, 0);
+        card.addView(titleView);
+
+        TextView summaryView = buildSectionSummary(block.getSummary(), false);
+        summaryView.setPadding(0, dp(4), 0, 0);
+        card.addView(summaryView);
         return card;
     }
 
     private View createSectionView(GboardPatchesSettingsContract.Section section) {
-        LinearLayout container = buildSectionContainer(
-                section.getStyle() == GboardPatchesSettingsContract.SectionStyle.ADVANCED);
-        if (section.getTitle() != null && !section.getTitle().isEmpty()) {
-            container.addView(buildSectionTitle(section.getTitle()));
+        LinearLayout outer = new LinearLayout(this);
+        outer.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams outerParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        outerParams.topMargin = dp(14);
+        outer.setLayoutParams(outerParams);
+
+        boolean hasTitle = section.getTitle() != null && !section.getTitle().isEmpty();
+        if (hasTitle) {
+            outer.addView(buildSectionTitle(section.getTitle()));
         }
         if (section.getDescription() != null && !section.getDescription().isEmpty()) {
-            container.addView(buildSectionSummary(section.getDescription(), false));
+            outer.addView(buildSectionSummary(section.getDescription(), false));
         }
-        boolean first = true;
-        for (GboardPatchesSettingsContract.Row item : section.getItems()) {
-            View rowView = createRowView(item);
-            if (!first) {
-                LinearLayout.LayoutParams params =
-                        (LinearLayout.LayoutParams) rowView.getLayoutParams();
-                params.topMargin = dp(6);
-                rowView.setLayoutParams(params);
+
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setBackground(buildCardDrawable(
+                section.getStyle() == GboardPatchesSettingsContract.SectionStyle.ADVANCED
+                        ? palette.advancedContainer : palette.surface,
+                palette.surfaceStroke,
+                dp(20)));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            card.setClipToOutline(true);
+        }
+        LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        cardParams.topMargin = hasTitle ? dp(6) : dp(2);
+        card.setLayoutParams(cardParams);
+
+        List<GboardPatchesSettingsContract.Row> items = section.getItems();
+        for (int i = 0; i < items.size(); i++) {
+            if (i > 0) {
+                View divider = new View(this);
+                divider.setBackgroundColor(palette.divider);
+                LinearLayout.LayoutParams divParams = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        dp(1));
+                divParams.leftMargin = dp(20);
+                divParams.rightMargin = dp(20);
+                card.addView(divider, divParams);
             }
-            container.addView(rowView);
-            first = false;
+            View rowView = createRowView(items.get(i));
+            card.addView(rowView);
         }
-        return container;
+        outer.addView(card);
+        return outer;
     }
 
     private void bindSwitchRowState(LinearLayout row, TextView titleView, TextView summaryView,
@@ -3158,10 +3233,10 @@ public final class GboardPatchesSettingsActivity extends Activity
             for (int index = 0; index < supportLine.getChildCount(); index++) {
                 View child = supportLine.getChildAt(index);
                 child.setEnabled(enabled);
-                child.setAlpha(enabled ? 1f : 0.9f);
+                child.setAlpha(enabled ? 1f : 0.6f);
             }
         }
-        row.setAlpha(enabled ? 1f : 0.92f);
+        row.setAlpha(enabled ? 1f : 0.6f);
     }
 
     private void applySwitchTint(Switch switchView) {
@@ -3172,16 +3247,16 @@ public final class GboardPatchesSettingsActivity extends Activity
                 new int[] { -android.R.attr.state_enabled, -android.R.attr.state_checked }
         };
         int[] thumbColors = new int[] {
-                palette.accent,
-                palette.textPrimary,
-                blendAlpha(palette.accent, 0.5f),
+                palette.onAccentContainer,
+                palette.textSecondary,
+                blendAlpha(palette.onAccentContainer, 0.5f),
                 blendAlpha(palette.textDisabled, 0.85f)
         };
         int[] trackColors = new int[] {
-                blendAlpha(palette.accent, 0.5f),
-                blendAlpha(palette.textSecondary, 0.45f),
-                blendAlpha(palette.accent, 0.28f),
-                blendAlpha(palette.textDisabled, 0.3f)
+                palette.accent,
+                palette.surfaceAlt,
+                blendAlpha(palette.accent, 0.38f),
+                blendAlpha(palette.textDisabled, 0.25f)
         };
         switchView.setThumbTintList(new ColorStateList(states, thumbColors));
         switchView.setTrackTintList(new ColorStateList(states, trackColors));
@@ -3205,7 +3280,7 @@ public final class GboardPatchesSettingsActivity extends Activity
         if (chevronView != null) {
             chevronView.setTextColor(enabled ? palette.textSecondary : palette.textDisabled);
         }
-        row.setAlpha(enabled ? 1f : 0.92f);
+        row.setAlpha(enabled ? 1f : 0.6f);
     }
 
     private void bindSelectorRowState(LinearLayout row, TextView titleView, TextView summaryView,
@@ -3215,7 +3290,7 @@ public final class GboardPatchesSettingsActivity extends Activity
             for (int index = 0; index < supportLine.getChildCount(); index++) {
                 View child = supportLine.getChildAt(index);
                 child.setEnabled(enabled);
-                child.setAlpha(enabled ? 1f : 0.9f);
+                child.setAlpha(enabled ? 1f : 0.6f);
             }
         }
     }
@@ -3224,9 +3299,9 @@ public final class GboardPatchesSettingsActivity extends Activity
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setGravity(Gravity.CENTER_VERTICAL);
-        row.setMinimumHeight(dp(72));
-        row.setPadding(dp(18), dp(14), dp(18), dp(14));
-        row.setBackground(buildRippleDrawable(dp(18)));
+        row.setMinimumHeight(dp(64));
+        row.setPadding(dp(20), dp(14), dp(20), dp(14));
+        row.setBackground(buildRippleDrawable(0));
         row.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -3236,7 +3311,8 @@ public final class GboardPatchesSettingsActivity extends Activity
     private LinearLayout buildDetailRowContainer() {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.VERTICAL);
-        row.setPadding(dp(18), dp(14), dp(18), dp(14));
+        row.setMinimumHeight(dp(64));
+        row.setPadding(dp(20), dp(14), dp(20), dp(14));
         row.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -3250,12 +3326,15 @@ public final class GboardPatchesSettingsActivity extends Activity
                 advanced ? palette.advancedContainer : palette.surface,
                 palette.surfaceStroke,
                 dp(20)));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            container.setClipToOutline(true);
+        }
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         params.topMargin = dp(12);
         container.setLayoutParams(params);
-        container.setPadding(dp(12), dp(12), dp(12), dp(12));
+        container.setPadding(dp(16), dp(16), dp(16), dp(16));
         return container;
     }
 
@@ -3276,7 +3355,7 @@ public final class GboardPatchesSettingsActivity extends Activity
         TextView titleView = new TextView(this);
         titleView.setTextColor(palette.textPrimary);
         titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f);
-        titleView.setTypeface(Typeface.DEFAULT_BOLD);
+        titleView.setTypeface(resolveGoogleSans(true));
         titleView.setLayoutParams(new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -3287,7 +3366,7 @@ public final class GboardPatchesSettingsActivity extends Activity
     private TextView buildRowSummary(String text, boolean monospace) {
         TextView summaryView = new TextView(this);
         summaryView.setTextColor(palette.textSecondary);
-        summaryView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f);
+        summaryView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -3299,6 +3378,9 @@ public final class GboardPatchesSettingsActivity extends Activity
             summaryView.setTypeface(Typeface.MONOSPACE);
             summaryView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
             summaryView.setLineSpacing(0f, 1.0f);
+        } else {
+            summaryView.setTypeface(resolveGoogleSans(false));
+            summaryView.setLineSpacing(0f, 1.15f);
         }
         return summaryView;
     }
@@ -3306,10 +3388,11 @@ public final class GboardPatchesSettingsActivity extends Activity
     private TextView buildSectionTitle(String text) {
         TextView titleView = new TextView(this);
         titleView.setText(text);
-        titleView.setTextColor(palette.textSecondary);
-        titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
-        titleView.setTypeface(Typeface.DEFAULT_BOLD);
-        titleView.setAllCaps(true);
+        titleView.setTextColor(palette.accent);
+        titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
+        titleView.setTypeface(resolveGoogleSans(true));
+        titleView.setAllCaps(false);
+        titleView.setPadding(dp(16), dp(16), dp(16), dp(6));
         return titleView;
     }
 
@@ -3318,15 +3401,13 @@ public final class GboardPatchesSettingsActivity extends Activity
         summaryView.setText(text);
         summaryView.setTextColor(palette.textSecondary);
         summaryView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.topMargin = dp(6);
-        summaryView.setLayoutParams(params);
+        summaryView.setPadding(dp(16), 0, dp(16), dp(8));
         summaryView.setVisibility(TextUtils.isEmpty(text) ? View.GONE : View.VISIBLE);
         if (monospace || isLikelyMonospace(text)) {
             summaryView.setTypeface(Typeface.MONOSPACE);
             summaryView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
+        } else {
+            summaryView.setTypeface(resolveGoogleSans(false));
         }
         return summaryView;
     }
@@ -3335,8 +3416,8 @@ public final class GboardPatchesSettingsActivity extends Activity
         TextView valueView = new TextView(this);
         valueView.setText(text);
         valueView.setTextColor(palette.accent);
-        valueView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f);
-        valueView.setTypeface(Typeface.DEFAULT_BOLD);
+        valueView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
+        valueView.setTypeface(resolveGoogleSans(true));
         valueView.setGravity(Gravity.CENTER_VERTICAL);
         return valueView;
     }
@@ -3397,7 +3478,7 @@ public final class GboardPatchesSettingsActivity extends Activity
         labelView.setText(text);
         labelView.setTextColor(palette.textSecondary);
         labelView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f);
-        labelView.setTypeface(Typeface.DEFAULT_BOLD);
+        labelView.setTypeface(resolveGoogleSans(true));
         labelView.setAllCaps(true);
         return labelView;
     }
@@ -3407,21 +3488,18 @@ public final class GboardPatchesSettingsActivity extends Activity
         chipView.setText(text);
         chipView.setTextColor(palette.accent);
         chipView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
-        chipView.setTypeface(Typeface.DEFAULT_BOLD);
+        chipView.setTypeface(resolveGoogleSans(true));
         chipView.setMaxLines(1);
         chipView.setEllipsize(TextUtils.TruncateAt.END);
         chipView.setMaxWidth(dp(200));
-        chipView.setPadding(dp(12), dp(7), dp(12), dp(7));
+        chipView.setPadding(dp(12), dp(6), dp(12), dp(6));
         chipView.setBackground(buildChipDrawable(palette.infoContainer, palette.surfaceStroke));
         return chipView;
     }
 
     private TextView buildChevronView() {
-        TextView chevronView = new TextView(this);
-        chevronView.setText("\u203a");
+        MaterialChevronView chevronView = new MaterialChevronView(this);
         chevronView.setTextColor(palette.textSecondary);
-        chevronView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22f);
-        chevronView.setTypeface(Typeface.DEFAULT_BOLD);
         chevronView.setGravity(Gravity.CENTER_VERTICAL);
         return chevronView;
     }
@@ -3435,8 +3513,8 @@ public final class GboardPatchesSettingsActivity extends Activity
         previewButton.setText(text(R.string.gboard_patches_preview_label));
         previewButton.setTextColor(palette.accent);
         previewButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);
-        previewButton.setTypeface(Typeface.DEFAULT_BOLD);
-        previewButton.setPadding(dp(10), dp(6), dp(10), dp(6));
+        previewButton.setTypeface(resolveGoogleSans(true));
+        previewButton.setPadding(dp(12), dp(6), dp(12), dp(6));
         previewButton.setBackground(buildChipDrawable(palette.infoContainer, palette.surfaceStroke));
         previewButton.setOnClickListener(view ->
                 runSafely("show row preview", () -> showPreviewDialog(previewSpec)));
@@ -3487,7 +3565,9 @@ public final class GboardPatchesSettingsActivity extends Activity
         GradientDrawable drawable = new GradientDrawable();
         drawable.setColor(fillColor);
         drawable.setCornerRadius(dp(999));
-        drawable.setStroke(dp(1), strokeColor);
+        if (strokeColor != Color.TRANSPARENT) {
+            drawable.setStroke(dp(1), strokeColor);
+        }
         return drawable;
     }
 
@@ -3516,14 +3596,17 @@ public final class GboardPatchesSettingsActivity extends Activity
         TextView positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
         if (positiveButton != null) {
             positiveButton.setTextColor(palette.accent);
+            positiveButton.setTypeface(resolveGoogleSans(true));
         }
         TextView negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
         if (negativeButton != null) {
             negativeButton.setTextColor(palette.accent);
+            negativeButton.setTypeface(resolveGoogleSans(true));
         }
         TextView neutralButton = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
         if (neutralButton != null) {
             neutralButton.setTextColor(palette.accent);
+            neutralButton.setTypeface(resolveGoogleSans(true));
         }
     }
 
@@ -3548,22 +3631,73 @@ public final class GboardPatchesSettingsActivity extends Activity
         return -1;
     }
 
-    private Drawable buildCardDrawable(int fillColor, int strokeColor, int radiusDp) {
+    private Drawable buildCardDrawable(int fillColor, int strokeColor, int radiusPx) {
         GradientDrawable drawable = new GradientDrawable();
         drawable.setColor(fillColor);
-        drawable.setCornerRadius(radiusDp);
-        drawable.setStroke(dp(1), strokeColor);
+        drawable.setCornerRadius(radiusPx);
+        if (strokeColor != Color.TRANSPARENT) {
+            drawable.setStroke(dp(1), strokeColor);
+        }
         return drawable;
     }
 
-    private Drawable buildRippleDrawable(int radiusDp) {
+    private Drawable buildRippleDrawable(int radiusPx) {
         GradientDrawable mask = new GradientDrawable();
         mask.setColor(Color.WHITE);
-        mask.setCornerRadius(radiusDp);
+        if (radiusPx > 0) {
+            mask.setCornerRadius(radiusPx);
+        }
         return new RippleDrawable(
                 ColorStateList.valueOf(palette.pressedOverlay),
                 null,
                 mask);
+    }
+
+    private Typeface resolveGoogleSans(boolean medium) {
+        try {
+            Typeface tf = Typeface.create(
+                    medium ? "google-sans-medium" : "google-sans",
+                    Typeface.NORMAL);
+            if (tf != null && !tf.equals(Typeface.DEFAULT)) {
+                return tf;
+            }
+        } catch (Throwable ignored) {
+        }
+        return Typeface.create(
+                medium ? "sans-serif-medium" : "sans-serif",
+                Typeface.NORMAL);
+    }
+
+    private static final class MaterialChevronView extends TextView {
+        private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Path path = new Path();
+
+        MaterialChevronView(Context context) {
+            super(context);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeCap(Paint.Cap.ROUND);
+            paint.setStrokeJoin(Paint.Join.ROUND);
+            int size = Math.round(24f * getResources().getDisplayMetrics().density);
+            setLayoutParams(new LinearLayout.LayoutParams(size, size));
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+            float density = getResources().getDisplayMetrics().density;
+            paint.setStrokeWidth(density * 2f);
+            paint.setColor(getCurrentTextColor());
+            float iconSize = density * 24f;
+            float left = (getWidth() - iconSize) / 2f;
+            float top = (getHeight() - iconSize) / 2f;
+            float scale = iconSize / 24f;
+
+            path.reset();
+            path.moveTo(left + (9f * scale), top + (6f * scale));
+            path.lineTo(left + (15f * scale), top + (12f * scale));
+            path.lineTo(left + (9f * scale), top + (18f * scale));
+            canvas.drawPath(path, paint);
+        }
     }
 
     private int blendAlpha(int color, float alphaFraction) {
@@ -3604,6 +3738,7 @@ public final class GboardPatchesSettingsActivity extends Activity
         final int surface;
         final int surfaceAlt;
         final int surfaceStroke;
+        final int divider;
         final int infoContainer;
         final int warningContainer;
         final int advancedContainer;
@@ -3611,15 +3746,19 @@ public final class GboardPatchesSettingsActivity extends Activity
         final int textSecondary;
         final int textDisabled;
         final int accent;
+        final int accentContainer;
+        final int onAccentContainer;
         final int pressedOverlay;
 
-        Palette(int windowBackground, int surface, int surfaceAlt, int surfaceStroke,
+        Palette(int windowBackground, int surface, int surfaceAlt, int surfaceStroke, int divider,
                 int infoContainer, int warningContainer, int advancedContainer, int textPrimary,
-                int textSecondary, int textDisabled, int accent, int pressedOverlay) {
+                int textSecondary, int textDisabled, int accent, int accentContainer,
+                int onAccentContainer, int pressedOverlay) {
             this.windowBackground = windowBackground;
             this.surface = surface;
             this.surfaceAlt = surfaceAlt;
             this.surfaceStroke = surfaceStroke;
+            this.divider = divider;
             this.infoContainer = infoContainer;
             this.warningContainer = warningContainer;
             this.advancedContainer = advancedContainer;
@@ -3627,6 +3766,8 @@ public final class GboardPatchesSettingsActivity extends Activity
             this.textSecondary = textSecondary;
             this.textDisabled = textDisabled;
             this.accent = accent;
+            this.accentContainer = accentContainer;
+            this.onAccentContainer = onAccentContainer;
             this.pressedOverlay = pressedOverlay;
         }
 
@@ -3635,32 +3776,38 @@ public final class GboardPatchesSettingsActivity extends Activity
                     == Configuration.UI_MODE_NIGHT_YES;
             if (nightMode) {
                 return new Palette(
-                        Color.parseColor("#FF0F1217"),
-                        Color.parseColor("#FF161B22"),
-                        Color.parseColor("#FF121821"),
+                        Color.parseColor("#FF111318"),
+                        Color.parseColor("#FF1E2025"),
+                        Color.parseColor("#FF282A2F"),
+                        Color.TRANSPARENT,
                         Color.parseColor("#1FFFFFFF"),
-                        Color.parseColor("#172554"),
-                        Color.parseColor("#3F2D16"),
-                        Color.parseColor("#111A2A"),
-                        Color.parseColor("#FFF3F5F8"),
-                        Color.parseColor("#FFAAB3C0"),
-                        Color.parseColor("#FF657181"),
-                        Color.parseColor("#FF8AB4F8"),
-                        Color.parseColor("#1F8AB4F8"));
+                        Color.parseColor("#FF004A77"),
+                        Color.parseColor("#FF4C3A00"),
+                        Color.parseColor("#FF1B1D22"),
+                        Color.parseColor("#FFE2E2E6"),
+                        Color.parseColor("#FFC4C7C5"),
+                        Color.parseColor("#FF8E918F"),
+                        Color.parseColor("#FFA8C7FA"),
+                        Color.parseColor("#FF004A77"),
+                        Color.parseColor("#FFD3E3FD"),
+                        Color.parseColor("#20A8C7FA"));
             }
             return new Palette(
-                    Color.parseColor("#F5F7FB"),
+                    Color.parseColor("#FFF8F9FA"),
                     Color.parseColor("#FFFFFFFF"),
-                    Color.parseColor("#EEF3FB"),
-                    Color.parseColor("#140F172A"),
-                    Color.parseColor("#E8F0FE"),
-                    Color.parseColor("#FEF3C7"),
-                    Color.parseColor("#F7F9FC"),
-                    Color.parseColor("#FF101828"),
-                    Color.parseColor("#FF5F6B7A"),
-                    Color.parseColor("#FFB6BFCC"),
-                    Color.parseColor("#FF1A73E8"),
-                    Color.parseColor("#141A73E8"));
+                    Color.parseColor("#FFF0F4F9"),
+                    Color.TRANSPARENT,
+                    Color.parseColor("#14000000"),
+                    Color.parseColor("#FFD3E3FD"),
+                    Color.parseColor("#FFFEF7E0"),
+                    Color.parseColor("#FFF0F4F9"),
+                    Color.parseColor("#FF1F1F1F"),
+                    Color.parseColor("#FF444746"),
+                    Color.parseColor("#FF747775"),
+                    Color.parseColor("#FF0B57D0"),
+                    Color.parseColor("#FFD3E3FD"),
+                    Color.parseColor("#FF041E49"),
+                    Color.parseColor("#140B57D0"));
         }
     }
 }

@@ -82,6 +82,31 @@ public final class GboardAdvancedVoice1803PolicyTest {
                 null, Locale.forLanguageTag("zh-TW"), false, null));
     }
 
+    @Test
+    public void enablesUniversalFormatterForAnyLocaleWhenStockAdvancedFeaturesAreEnabled()
+            throws Exception {
+        Method universalFormatter = policyMethod(
+                "maybeEnableUniversalFormatter",
+                Locale.class, boolean.class, Object.class);
+
+        Locale[] locales = new Locale[] {
+                Locale.forLanguageTag("zh-TW"),
+                Locale.forLanguageTag("zh-CN"),
+                Locale.US,
+                Locale.forLanguageTag("es-ES"),
+                Locale.forLanguageTag("fr-FR"),
+                Locale.forLanguageTag("de-DE"),
+                Locale.forLanguageTag("ja-JP"),
+                Locale.forLanguageTag("hi-IN")
+        };
+        for (Locale locale : locales) {
+            Assert.assertEquals("Enabled for " + locale, Boolean.FALSE, universalFormatter.invoke(
+                    null, locale, false, Boolean.TRUE));
+            Assert.assertEquals("Disabled for " + locale, Boolean.TRUE, universalFormatter.invoke(
+                    null, locale, true, Boolean.TRUE));
+        }
+    }
+
     private static Method policyMethod(String name, Class<?>... parameterTypes)
             throws Exception {
         Class<?> policy;

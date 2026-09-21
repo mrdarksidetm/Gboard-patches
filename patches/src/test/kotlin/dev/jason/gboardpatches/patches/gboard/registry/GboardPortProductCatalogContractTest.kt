@@ -12,6 +12,7 @@ import dev.jason.gboardpatches.patches.gboard.features.bluetoothmicrophone.gboar
 import dev.jason.gboardpatches.patches.gboard.features.clipboardcontentlimit.gboardClipboardContentLimitFlagValuePatch
 import dev.jason.gboardpatches.patches.gboard.features.closeproactivesuggestions.gboardCloseProactiveSuggestionsFlagValuePatch
 import dev.jason.gboardpatches.patches.gboard.features.cursortrackpad.gboardCursorTrackpadFlagValuePatch
+import dev.jason.gboardpatches.patches.gboard.features.emojifont.gboardEmojiFontPatch
 import dev.jason.gboardpatches.patches.gboard.features.emojisize.gboardEmojiSizeFlagValuePatch
 import dev.jason.gboardpatches.patches.gboard.features.englishqwerty.gboardEnglishQwertySoftKeyPatch
 import dev.jason.gboardpatches.patches.gboard.features.featureflags.gboardDeviceIntelligenceFlagValuePatch
@@ -663,6 +664,7 @@ class GboardPortProductCatalogContractTest {
             "clipboard_custom_character_limit" to "version-sensitive",
             "clipboard_enhancements" to "version-sensitive",
             "close_proactive_suggestions" to "version-sensitive",
+            "custom_emoji_font" to "version-sensitive",
             "custom_symbols" to "version-sensitive",
             "developer_options" to "version-sensitive",
             "emojis_stickers_gifs_tab_order" to "version-sensitive",
@@ -835,6 +837,13 @@ class GboardPortProductCatalogContractTest {
             ),
         )
         val SOFT_KEY_FEATURE_CONTRACTS = listOf(
+            SoftKeyFeatureContract(
+                "custom_emoji_font",
+                GboardSoftKeyFamilyFeature.CUSTOM_EMOJI_FONT,
+                gboardEmojiFontPatch,
+                "gboardEmojiFontPatch",
+                FEATURE_ROOT + "emojifont/GboardEmojiFontPatch.kt",
+            ),
             SoftKeyFeatureContract(
                 "custom_symbols",
                 GboardSoftKeyFamilyFeature.CUSTOM_SYMBOLS,

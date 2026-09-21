@@ -35,7 +35,16 @@ public final class GboardAdvancedVoice1803RuntimeSettings {
     }
 
     public static boolean isRamblerEnabled() {
-        return false;
+        try {
+            if (!isEnabled()) {
+                return false;
+            }
+            String backendOverride = backendOverrideForTest;
+            String backend = backendOverride != null ? backendOverride : snapshot().backend;
+            return GboardAdvancedVoiceSettings.BACKEND_RAMBLER.equals(backend);
+        } catch (Throwable ignored) {
+            return false;
+        }
     }
 
     public static GboardVoiceInputMode effectiveMode() {
