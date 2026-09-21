@@ -69,6 +69,13 @@ Import custom ZIP themes and beautiful themes from the official Rboard repositor
 </details>
 
 <details>
+  <summary><code>Toolbar Editing Buttons</code></summary>
+
+  Add Select All, Copy, Cut and Paste to the menu. Drag them to the top toolbar and
+  use them with different keyboard languages in supported editors.
+</details>
+
+<details>
   <summary><code>Swipeable Custom Top Row</code></summary>
 
   Lets you swipe the keyboard top row horizontally to open customizable text and JavaScript slots.

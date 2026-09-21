@@ -3126,4 +3126,40 @@
         <translation locale="en">Theme import failed</translation>
         <translation locale="zh-Hant">主題匯入失敗</translation>
     </string>
+    <string name="gboard_edit_ap_title">
+        <translation locale="en">Toolbar editing buttons</translation>
+        <translation locale="zh-Hant">工具列編輯按鈕</translation>
+    </string>
+    <string name="gboard_edit_ap_section_feature">
+        <translation locale="en">Feature</translation>
+        <translation locale="zh-Hant">功能</translation>
+    </string>
+    <string name="gboard_edit_ap_summary">
+        <translation locale="en">Add Select All, Copy, Cut and Paste to the menu.</translation>
+        <translation locale="zh-Hant">將全選、複製、剪下與貼上加入選單。</translation>
+    </string>
+    <string name="gboard_edit_ap_restart">
+        <translation locale="en">Changes take effect after you force stop and restart Gboard.</translation>
+        <translation locale="zh-Hant">強制停止並重新啟動 Gboard 後生效</translation>
+    </string>
+    <string name="gboard_edit_ap_select_all">
+        <translation locale="en">Select all</translation>
+        <translation locale="zh-Hant">全選</translation>
+    </string>
+    <string name="gboard_edit_ap_copy">
+        <translation locale="en">Copy</translation>
+        <translation locale="zh-Hant">複製</translation>
+    </string>
+    <string name="gboard_edit_ap_cut">
+        <translation locale="en">Cut</translation>
+        <translation locale="zh-Hant">剪下</translation>
+    </string>
+    <string name="gboard_edit_ap_paste">
+        <translation locale="en">Paste</translation>
+        <translation locale="zh-Hant">貼上</translation>
+    </string>
+    <string name="gboard_edit_ap_error">
+        <translation locale="en">Editing buttons settings unavailable. Reopen settings and try again.</translation>
+        <translation locale="zh-Hant">編輯按鈕設定無法載入，請重新開啟設定再試一次。</translation>
+    </string>
 </settings-text>

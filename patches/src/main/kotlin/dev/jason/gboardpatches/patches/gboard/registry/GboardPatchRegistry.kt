@@ -1,6 +1,8 @@
 package dev.jason.gboardpatches.patches.gboard.registry
 
 import app.morphe.patcher.patch.Patch
+import dev.jason.gboardpatches.patches.gboard.features.editingaccesspoints.gboardEditingAccessPointsFeatureMarkerPatch
+import dev.jason.gboardpatches.patches.gboard.features.editingaccesspoints.gboardEditingAccessPointsLifecyclePatch
 import app.morphe.patcher.patch.ResourcePatchBuilder
 import app.morphe.patcher.patch.resourcePatch
 import app.morphe.patcher.patch.stringOption
@@ -194,6 +196,23 @@ val gboardManualIncognitoModePatch = gboardPublicResourcePatch(
         gboardManualIncognitoFeatureMarkerPatch,
         gboardManualIncognitoLifecyclePatch,
         gboardManualIncognitoPolicyPatch,
+        gboardAccessPointContributions1803Patch,
+    )
+}
+
+@Suppress("unused")
+val gboardEditingAccessPointsPatch = gboardPublicResourcePatch(
+    featureId = "editing_access_points",
+    name = "Toolbar Editing Buttons",
+    description = "將全選、複製、剪下與貼上加入選單。\n" +
+        "Add Select All, Copy, Cut and Paste to the menu.",
+    default = true,
+) {
+    compatibleWith(COMPATIBILITY_GBOARD)
+    dependsOn(
+        gboardPatchesSettingsPatch,
+        gboardEditingAccessPointsFeatureMarkerPatch,
+        gboardEditingAccessPointsLifecyclePatch,
         gboardAccessPointContributions1803Patch,
     )
 }
@@ -827,6 +846,7 @@ object GboardPublishedPatchCatalog {
         gboardSpacebarLogoPatch,
         gboardManualIncognitoModePatch,
         gboardFloatingWebSearchPatch,
+        gboardEditingAccessPointsPatch,
         gboardSimpleCalculatorPatch,
         gboardAdvancedVoiceTypingPatch,
         gboardBluetoothMicrophonePatch,

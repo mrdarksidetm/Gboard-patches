@@ -1,7 +1,7 @@
 {
   "$schema": "gboard-port-product-catalog.schema.json",
   "format": "gboard-port-product-catalog.v1",
-  "catalog_version": "1.14.0",
+  "catalog_version": "1.15.0",
   "composition": {
     "selected_only_call_chain": true,
     "runtime_feature_mask": false
@@ -277,6 +277,24 @@
       ],
       "contributions": [
         { "contribution_id": "developer_options.resources", "anchor_family_id": "resource_only", "phase": "resource", "order": 100, "required_bindings": [], "runtime_calls": [] }
+      ]
+    },
+    {
+      "feature_id": "editing_access_points",
+      "public_patch_name": "Toolbar Editing Buttons",
+      "feature_marker": "dev.jason.gboardpatches.feature.editing_access_points",
+      "target_family_ids": ["accesspoint.1803", "editingaccesspoints"],
+      "migration_scope": "version-sensitive",
+      "consumer_files": [
+        "patches/src/main/kotlin/dev/jason/gboardpatches/patches/gboard/features/editingaccesspoints/GboardEditingAccessPoints1803Targets.kt",
+        "patches/src/main/kotlin/dev/jason/gboardpatches/patches/gboard/features/editingaccesspoints/GboardEditingAccessPointsFeatureMarkerPatch.kt",
+        "patches/src/main/kotlin/dev/jason/gboardpatches/patches/gboard/features/editingaccesspoints/GboardEditingAccessPointsLifecyclePatch.kt",
+        "patches/src/main/kotlin/dev/jason/gboardpatches/patches/gboard/registry/GboardPatchRegistry.kt",
+        "patches/src/main/kotlin/dev/jason/gboardpatches/patches/gboard/shared/accesspoint/GboardAccessPointContributions1803Patch.kt",
+        "patches/src/main/kotlin/dev/jason/gboardpatches/patches/gboard/shared/accesspoint/GboardAccessPointContributions1803Targets.kt"
+      ],
+      "contributions": [
+        { "contribution_id": "editing_access_points.runtime", "anchor_family_id": "dedicated_bytecode", "phase": "dedicated", "order": 1260, "required_bindings": [], "runtime_calls": ["ACCESS_POINT_CONTRIBUTIONS_1803_AFTER_CONTROLLER_CREATED", "ACCESS_POINT_CONTRIBUTIONS_1803_INCLUDE_ORDER_CATALOG", "EDITING_ACCESS_POINTS_START", "EDITING_ACCESS_POINTS_END"] }
       ]
     },
     {

@@ -1,3 +1,13 @@
+## [3.11.0-dev.3](https://github.com/jasonwu1994/Gboard-patches/compare/v3.11.0-dev.2...v3.11.0-dev.3) (2026-09-20)
+
+### ✨ New Features
+
+* **Gboard:** add the `Toolbar Editing Buttons` patch, which adds Select all, Copy, Cut, and Paste actions to the toolbar menu.
+
+### ✨ 新功能
+
+* **Gboard:** 新增 `Toolbar Editing Buttons` Patch，將「全選」、「複製」、「剪下」與「貼上」操作加入工具列選單。
+
 ## [3.11.0-dev.2](https://github.com/jasonwu1994/Gboard-patches/compare/v3.10.0...v3.11.0-dev.2) (2026-09-18)
 
 ### ✨ New Features
