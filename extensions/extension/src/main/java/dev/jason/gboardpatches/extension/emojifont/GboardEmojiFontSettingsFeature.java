@@ -69,7 +69,7 @@ public final class GboardEmojiFontSettingsFeature implements GboardPatchesSettin
 
     @Override
     public boolean isAvailable(Context context) {
-        return GboardPatchesFeatureAvailability.isAvailable(
+        return GboardPatchesFeatureAvailability.hasFeature(
                 context, GboardPatchesFeatureAvailability.FEATURE_CUSTOM_EMOJI_FONT);
     }
 
@@ -81,7 +81,7 @@ public final class GboardEmojiFontSettingsFeature implements GboardPatchesSettin
     @Override
     public GboardPatchesSettingsContract.Screen buildScreen(
             GboardPatchesSettingsContract.FeatureHost host) {
-        Context hostContext = host.getHostContext();
+        Context hostContext = host.getContext();
         try {
             SharedPreferences preferences = GboardEmojiFontSettings.preferences(hostContext);
             boolean enabled = GboardEmojiFontSettings.readEnabled(preferences);
@@ -107,12 +107,13 @@ public final class GboardEmojiFontSettingsFeature implements GboardPatchesSettin
 
             GboardPatchesSettingsContract.Row selectRow = new GboardPatchesSettingsContract.CommandRow(
                     selectTitle, selectSummary, true,
-                    () -> host.openBinaryDocument(
+                    () -> GboardPatchesSettingsContract.openBinaryDocument(
+                            host,
                             new String[]{"font/ttf", "font/otf", "font/*", "application/x-font-ttf", "*/*"},
                             document -> {
-                                if (document != null && document.getBytes() != null && document.getBytes().length > 0) {
+                                if (document != null && document.getData() != null && document.getData().length > 0) {
                                     GboardEmojiFontRuntime.saveCustomEmojiFont(
-                                            hostContext, document.getBytes(), document.getName());
+                                            hostContext, document.getData(), document.getDisplayName());
                                     GboardPatchesSettingsContract.refresh(host);
                                 }
                             }));

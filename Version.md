@@ -130,16 +130,16 @@
     - Updated `GboardRambler1803OfficialSelectionRuntimeTest.java` to verify Rambler persistent agentic dictation and test isolation overrides.
     - Updated `GboardAdvancedVoiceUniversalLocaleTest.java`: tested `UniversalSupportedLocaleSet` for US, India, and general locales.
   - **Files Created/Modified:**
-    - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/advancedvoice/GboardAdvancedVoiceSettings.java` (Modified)
-    - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/advancedvoice/GboardAdvancedVoice1803RuntimeSettings.java` (Modified)
-    - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/rambler/GboardRambler1803OfficialSelectionRuntime.java` (Modified)
-    - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/advancedvoice/GboardAdvancedVoice1803Runtime.java` (Modified)
-    - `extensions/extension/src/test/java/dev/jason/gboardpatches/extension/advancedvoice/GboardAdvancedVoice1803RuntimeSettingsTest.java` (Modified)
-    - `extensions/extension/src/test/java/dev/jason/gboardpatches/extension/rambler/GboardRambler1803OfficialSelectionRuntimeTest.java` (Modified)
-    - `extensions/extension/src/test/java/dev/jason/gboardpatches/extension/advancedvoice/GboardAdvancedVoiceUniversalLocaleTest.java` (Modified)
-    - `scripts/verify-invariants.ps1` (Created)
-    - `.github/workflows/upstream-sync.yml` (Created)
-    - `Version.md` (Appended)
+  - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/advancedvoice/GboardAdvancedVoiceSettings.java` (Modified)
+  - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/advancedvoice/GboardAdvancedVoice1803RuntimeSettings.java` (Modified)
+  - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/rambler/GboardRambler1803OfficialSelectionRuntime.java` (Modified)
+  - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/advancedvoice/GboardAdvancedVoice1803Runtime.java` (Modified)
+  - `extensions/extension/src/test/java/dev/jason/gboardpatches/extension/advancedvoice/GboardAdvancedVoice1803RuntimeSettingsTest.java` (Modified)
+  - `extensions/extension/src/test/java/dev/jason/gboardpatches/extension/rambler/GboardRambler1803OfficialSelectionRuntimeTest.java` (Modified)
+  - `extensions/extension/src/test/java/dev/jason/gboardpatches/extension/advancedvoice/GboardAdvancedVoiceUniversalLocaleTest.java` (Modified)
+  - `scripts/verify-invariants.ps1` (Created)
+  - `.github/workflows/upstream-sync.yml` (Created)
+  - `Version.md` (Appended)
 
 ### [2026-09-21 19:15:00] Material 3 Expressive UI Overhaul for Patches Settings & Repository Alignment
 - **Status:** Implemented & Invariants Verified
@@ -197,4 +197,18 @@
   - `extensions/extension/src/main/res/values/colors.xml` (Modified)
   - `extensions/extension/src/main/res/values-night/colors.xml` (Modified)
   - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/writingtools/GboardAiWritingToolsRuntime.java` (Modified)
+  - `Version.md` (Appended)
+
+### [2026-09-22 07:57:00 IST] Fix Emoji Font Feature Host Contract & Availability Method Signatures
+- **Status:** Resolved & Re-dispatching Build
+- **Version:** v1.0.0
+- **Repository:** https://github.com/mrdarksidetm/Gboard-patches
+- **Summary:**
+  - Resolved compileReleaseJavaWithJavac compilation errors in `GboardEmojiFontSettingsFeature.java`:
+    - Updated `GboardPatchesFeatureAvailability.isAvailable` call to `hasFeature`.
+    - Corrected host context retrieval from `host.getHostContext()` to `host.getContext()`.
+    - Replaced instance call `host.openBinaryDocument` with contract delegate `GboardPatchesSettingsContract.openBinaryDocument(host, ...)`.
+    - Updated document payload accessors from `document.getBytes()` and `document.getName()` to `document.getData()` and `document.getDisplayName()`.
+- **Files Modified:**
+  - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/emojifont/GboardEmojiFontSettingsFeature.java` (Modified)
   - `Version.md` (Appended)
