@@ -109,11 +109,15 @@ public final class GboardEmojiFontSettingsFeature implements GboardPatchesSettin
                     selectTitle, selectSummary, true,
                     () -> GboardPatchesSettingsContract.openBinaryDocument(
                             host,
-                            new String[]{"font/ttf", "font/otf", "font/*", "application/x-font-ttf", "*/*"},
+                            new String[]{"font/ttf", "font/otf", "font/*", "application/x-font-ttf", "application/x-font-truetype", "application/octet-stream", "*/*"},
                             document -> {
                                 if (document != null && document.getData() != null && document.getData().length > 0) {
-                                    GboardEmojiFontRuntime.saveCustomEmojiFont(
+                                    boolean saved = GboardEmojiFontRuntime.saveCustomEmojiFont(
                                             hostContext, document.getData(), document.getDisplayName());
+                                    if (saved) {
+                                        GboardEmojiFontSettings.writeEnabled(preferences, true);
+                                    }
+                                    GboardEmojiFontRuntime.invalidateCache();
                                     GboardPatchesSettingsContract.refresh(host);
                                 }
                             }));
@@ -125,6 +129,7 @@ public final class GboardEmojiFontSettingsFeature implements GboardPatchesSettin
                     resetTitle, resetSummary, hasFont,
                     () -> {
                         GboardEmojiFontRuntime.deleteCustomEmojiFont(hostContext);
+                        GboardEmojiFontRuntime.invalidateCache();
                         GboardPatchesSettingsContract.refresh(host);
                     },
                     resetTitle, resetSummary);
@@ -135,12 +140,17 @@ public final class GboardEmojiFontSettingsFeature implements GboardPatchesSettin
 
             GboardPatchesSettingsContract.Row previewRow = new GboardPatchesSettingsContract.DetailRow(
                     previewSampleTitle,
-                    SAMPLE_EMOJIS + "\n" + previewStatus,
-                    true);
+                    SAMPLE_EMOJIS,
+                    false);
+
+            GboardPatchesSettingsContract.Row previewStatusRow = new GboardPatchesSettingsContract.DetailRow(
+                    "Font Status",
+                    previewStatus,
+                    false);
 
             GboardPatchesSettingsContract.Section previewSection = new GboardPatchesSettingsContract.Section(
                     sectionPreview,
-                    Collections.singletonList(previewRow));
+                    Arrays.asList(previewRow, previewStatusRow));
 
             return new GboardPatchesSettingsContract.Screen(
                     entryTitle, headerBadge, entryTitle, entrySummary, Collections.emptyList(),

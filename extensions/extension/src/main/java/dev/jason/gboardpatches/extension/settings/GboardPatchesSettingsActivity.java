@@ -1353,6 +1353,9 @@ public final class GboardPatchesSettingsActivity extends Activity
             reader.accept(new GboardPatchesSettingsContract.BinaryDocument(
                     queryDisplayName(uri), getContentResolver().getType(uri),
                     readBinaryDocument(uri)));
+        } catch (OutOfMemoryError oom) {
+            Log.e(TAG, "Out of memory reading selected binary document", oom);
+            Toast.makeText(this, "File is too large for device memory.", Toast.LENGTH_SHORT).show();
         } catch (Throwable throwable) {
             Log.w(TAG, "Failed to read selected binary document", throwable);
             Toast.makeText(this, DOCUMENT_READ_FAILED, Toast.LENGTH_SHORT).show();
@@ -1395,8 +1398,9 @@ public final class GboardPatchesSettingsActivity extends Activity
             if (input == null) {
                 throw new java.io.IOException("Content resolver returned null input stream");
             }
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            byte[] buffer = new byte[8192];
+            int available = Math.max(32768, Math.min(input.available(), 32 * 1024 * 1024));
+            ByteArrayOutputStream output = new ByteArrayOutputStream(available);
+            byte[] buffer = new byte[32768];
             int read;
             while ((read = input.read(buffer)) != -1) {
                 output.write(buffer, 0, read);
@@ -3101,6 +3105,11 @@ public final class GboardPatchesSettingsActivity extends Activity
         LinearLayout row = buildDetailRowContainer();
         TextView titleView = buildRowTitle(rowModel.getTitle());
         TextView summaryView = buildRowSummary(rowModel.getSummary(), rowModel.isMonospace());
+        if (rowModel.getSummary() != null && dev.jason.gboardpatches.extension.emojifont.GboardEmojiFontRuntime.isEmojiOrSymbol(rowModel.getSummary())) {
+            dev.jason.gboardpatches.extension.emojifont.GboardEmojiFontRuntime.applyToTextView(summaryView);
+            summaryView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
+            summaryView.setLineSpacing(dp(6), 1.25f);
+        }
         row.addView(titleView);
         row.addView(summaryView);
         titleView.setTextColor(rowModel.isEnabled() ? palette.textPrimary : palette.textDisabled);

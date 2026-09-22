@@ -22,6 +22,31 @@ public final class GboardEmojiFontRuntime {
     private GboardEmojiFontRuntime() {
     }
 
+    public static Typeface loadTypefaceFromFile(File fontFile) {
+        if (fontFile == null || !fontFile.exists() || fontFile.length() == 0) {
+            return null;
+        }
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            try {
+                android.graphics.fonts.Font font =
+                        new android.graphics.fonts.Font.Builder(fontFile).build();
+                android.graphics.fonts.FontFamily family =
+                        new android.graphics.fonts.FontFamily.Builder(font).build();
+                return new Typeface.CustomFallbackBuilder(family)
+                        .setSystemFallback("sans-serif")
+                        .build();
+            } catch (Throwable t) {
+                Log.w(TAG, "CustomFallbackBuilder failed, falling back to createFromFile: " + t.getMessage());
+            }
+        }
+        try {
+            return Typeface.createFromFile(fontFile);
+        } catch (Throwable t) {
+            Log.w(TAG, "Typeface.createFromFile failed: " + t.getMessage());
+            return null;
+        }
+    }
+
     public static Typeface getCustomEmojiTypefaceOrNull(Context context) {
         if (context == null) return null;
         if (cacheInitialized) {
@@ -37,7 +62,7 @@ public final class GboardEmojiFontRuntime {
                 if (GboardEmojiFontSettings.readEnabled(prefs)) {
                     File fontFile = GboardEmojiFontSettings.getFontFile(context);
                     if (fontFile != null && fontFile.exists() && fontFile.length() > 0) {
-                        loaded = Typeface.createFromFile(fontFile);
+                        loaded = loadTypefaceFromFile(fontFile);
                     }
                 }
             } catch (Throwable throwable) {
@@ -78,9 +103,22 @@ public final class GboardEmojiFontRuntime {
                 fos.close();
             }
 
-            // Verify typeface can be parsed before activating
-            Typeface testTypeface = Typeface.createFromFile(tempFile);
-            if (testTypeface == null) {
+            // Verify font validity via Typeface loader with SFNT header fallback
+            boolean valid = false;
+            try {
+                Typeface testTypeface = loadTypefaceFromFile(tempFile);
+                if (testTypeface != null) {
+                    valid = true;
+                }
+            } catch (Throwable t) {
+                Log.w(TAG, "Typeface validation check encountered non-fatal error: " + t.getMessage());
+            }
+
+            if (!valid) {
+                valid = isValidFontData(data);
+            }
+
+            if (!valid) {
                 tempFile.delete();
                 return false;
             }
@@ -101,6 +139,19 @@ public final class GboardEmojiFontRuntime {
             Log.w(TAG, "Failed to save custom emoji font", throwable);
             return false;
         }
+    }
+
+    private static boolean isValidFontData(byte[] data) {
+        if (data == null || data.length < 12) return false;
+        int tag = ((data[0] & 0xFF) << 24)
+                | ((data[1] & 0xFF) << 16)
+                | ((data[2] & 0xFF) << 8)
+                | (data[3] & 0xFF);
+        return tag == 0x00010000 // TrueType
+                || tag == 0x4F54544F // 'OTTO' OpenType
+                || tag == 0x74727565 // 'true'
+                || tag == 0x74797031 // 'typ1'
+                || tag == 0x774F4646; // 'wOFF'
     }
 
     public static boolean deleteCustomEmojiFont(Context context) {
@@ -126,6 +177,8 @@ public final class GboardEmojiFontRuntime {
             Typeface custom = getCustomEmojiTypefaceOrNull(textView.getContext());
             if (custom != null) {
                 textView.setTypeface(custom);
+                textView.invalidate();
+                textView.requestLayout();
             }
         } catch (Throwable throwable) {
             Log.w(TAG, "Failed to apply custom emoji typeface to TextView", throwable);
@@ -151,16 +204,81 @@ public final class GboardEmojiFontRuntime {
             Typeface custom = getCustomEmojiTypefaceOrNull(root.getContext());
             if (custom == null) return;
 
-            View labelView = root.findViewById(PRIMARY_LABEL_VIEW_ID);
-            if (labelView instanceof TextView) {
-                TextView textView = (TextView) labelView;
-                CharSequence text = textView.getText();
-                if (isEmojiOrSymbol(text) || isEmojiOrSymbol(textView.getContentDescription())) {
-                    textView.setTypeface(custom);
+            boolean isKeyEmoji = isMetadataEmoji(metadata);
+            applyToViewTree(root, custom, isKeyEmoji);
+            root.post(() -> {
+                try {
+                    applyToViewTree(root, custom, isKeyEmoji);
+                } catch (Throwable ignored) {
                 }
-            }
+            });
         } catch (Throwable throwable) {
             // Never disrupt keyboard key binding
+        }
+    }
+
+    public static boolean isMetadataEmoji(Object metadata) {
+        if (metadata == null) return false;
+        if (metadata instanceof CharSequence) {
+            return isEmojiOrSymbol((CharSequence) metadata);
+        }
+        try {
+            Class<?> clazz = metadata.getClass();
+            // 1. Inspect label arrays (field 'g' in Gboard SoftKeyDef: CharSequence[] g)
+            for (java.lang.reflect.Field f : clazz.getDeclaredFields()) {
+                if (f.getType().isArray() && CharSequence.class.isAssignableFrom(f.getType().getComponentType())) {
+                    f.setAccessible(true);
+                    Object array = f.get(metadata);
+                    if (array instanceof CharSequence[] labels) {
+                        for (CharSequence cs : labels) {
+                            if (isEmojiOrSymbol(cs)) return true;
+                        }
+                    }
+                }
+            }
+            // 2. Inspect ActionDef array fields (e.g. field 'f')
+            for (java.lang.reflect.Field f : clazz.getDeclaredFields()) {
+                if (f.getType().isArray() && f.getType().getComponentType().getName().contains("ActionDef")) {
+                    f.setAccessible(true);
+                    Object actionsObj = f.get(metadata);
+                    if (actionsObj instanceof Object[] actions) {
+                        for (Object action : actions) {
+                            if (action == null) continue;
+                            for (java.lang.reflect.Field af : action.getClass().getDeclaredFields()) {
+                                af.setAccessible(true);
+                                Object val = af.get(action);
+                                if (val instanceof CharSequence && isEmojiOrSymbol((CharSequence) val)) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+        return false;
+    }
+
+    private static void applyToViewTree(View view, Typeface typeface, boolean forceEmojiKey) {
+        if (view == null || typeface == null) return;
+        if (view instanceof TextView) {
+            TextView tv = (TextView) view;
+            if (forceEmojiKey) {
+                tv.setTypeface(typeface);
+            } else {
+                CharSequence text = tv.getText();
+                CharSequence desc = tv.getContentDescription();
+                if (isEmojiOrSymbol(text) || isEmojiOrSymbol(desc)) {
+                    tv.setTypeface(typeface);
+                }
+            }
+        } else if (view instanceof android.view.ViewGroup) {
+            android.view.ViewGroup vg = (android.view.ViewGroup) view;
+            int count = vg.getChildCount();
+            for (int i = 0; i < count; i++) {
+                applyToViewTree(vg.getChildAt(i), typeface, forceEmojiKey);
+            }
         }
     }
 
@@ -178,10 +296,17 @@ public final class GboardEmojiFontRuntime {
     }
 
     private static boolean isEmojiCodePoint(int codePoint) {
-        return (codePoint >= 0x1F000 && codePoint <= 0x1FAFF) // Emoticons, Pictographs, Symbols
-                || (codePoint >= 0x2600 && codePoint <= 0x27BF) // Miscellaneous Symbols, Dingbats
-                || (codePoint >= 0xFE00 && codePoint <= 0xFE0F) // Variation Selectors
-                || (codePoint >= 0x1F900 && codePoint <= 0x1F9FF) // Supplemental Symbols
-                || (codePoint >= 0x2300 && codePoint <= 0x23FF); // Misc Technical
+        if (codePoint >= 0x1F000 && codePoint <= 0x1FAFF) return true; // Emoticons, Pictographs, Symbols, Transport
+        if (codePoint >= 0x2600 && codePoint <= 0x27BF) return true;   // Misc Symbols, Dingbats
+        if (codePoint >= 0x2300 && codePoint <= 0x23FF) return true;   // Misc Technical
+        if (codePoint >= 0x2B00 && codePoint <= 0x2BFF) return true;   // Misc Symbols and Arrows
+        if (codePoint >= 0x2190 && codePoint <= 0x21FF) return true;   // Arrows
+        if (codePoint >= 0x2900 && codePoint <= 0x297F) return true;   // Supplemental Arrows B
+        if (codePoint >= 0x3200 && codePoint <= 0x32FF) return true;   // Enclosed CJK
+        if (codePoint >= 0xFE00 && codePoint <= 0xFE0F) return true;   // Variation Selectors
+        if (codePoint >= 0xE0020 && codePoint <= 0xE007F) return true; // Tag characters (flags)
+        if (codePoint == 0x200D) return true;                          // Zero-width joiner
+        int type = Character.getType(codePoint);
+        return type == Character.OTHER_SYMBOL || type == Character.SURROGATE || type == Character.MODIFIER_SYMBOL;
     }
 }

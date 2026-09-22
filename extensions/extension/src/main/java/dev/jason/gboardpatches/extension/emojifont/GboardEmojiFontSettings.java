@@ -17,8 +17,17 @@ public final class GboardEmojiFontSettings {
     private GboardEmojiFontSettings() {
     }
 
+    public static Context resolveAppContext(Context context) {
+        if (context == null) return null;
+        Context app = context.getApplicationContext();
+        return app != null ? app : context;
+    }
+
     public static SharedPreferences preferences(Context context) {
-        return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        Context resolved = resolveAppContext(context);
+        return resolved != null
+                ? resolved.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+                : context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
     public static boolean readEnabled(SharedPreferences preferences) {
@@ -48,8 +57,9 @@ public final class GboardEmojiFontSettings {
     }
 
     public static File getFontFile(Context context) {
-        if (context == null) return null;
-        File filesDir = context.getFilesDir();
+        Context resolved = resolveAppContext(context);
+        if (resolved == null) return null;
+        File filesDir = resolved.getFilesDir();
         if (filesDir == null) return null;
         return new File(filesDir, FONT_FILE_NAME);
     }

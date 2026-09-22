@@ -35,4 +35,22 @@ public class GboardEmojiFontRuntimeTest {
         Assert.assertEquals("custom_emoji_font.ttf", GboardEmojiFontSettings.FONT_FILE_NAME);
         Assert.assertFalse(GboardEmojiFontSettings.DEFAULT_ENABLED);
     }
+
+    @Test
+    public void testIsMetadataEmoji() {
+        Assert.assertTrue(GboardEmojiFontRuntime.isMetadataEmoji("😀"));
+        Assert.assertFalse(GboardEmojiFontRuntime.isMetadataEmoji("abc"));
+        Assert.assertFalse(GboardEmojiFontRuntime.isMetadataEmoji(null));
+
+        // Mock object with CharSequence array field
+        class MockKeyDef {
+            public CharSequence[] g = new CharSequence[]{"😀", "fire"};
+        }
+        Assert.assertTrue(GboardEmojiFontRuntime.isMetadataEmoji(new MockKeyDef()));
+
+        class MockNonEmojiKeyDef {
+            public CharSequence[] g = new CharSequence[]{"a", "b"};
+        }
+        Assert.assertFalse(GboardEmojiFontRuntime.isMetadataEmoji(new MockNonEmojiKeyDef()));
+    }
 }

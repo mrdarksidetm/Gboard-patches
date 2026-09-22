@@ -264,3 +264,37 @@
 - **Files Modified:**
   - `.github/workflows/release.yml` (Modified)
   - `Version.md` (Appended)
+
+### [2026-09-22 09:37:00 IST] Typeface Fallback Chain, SoftKeyDef Inspection, and Memory-Safe SAF Emoji Font Loading
+- **Status:** Resolved & Verified
+- **Version:** v1.0.0
+- **Repository:** https://github.com/mrdarksidetm/Gboard-patches
+- **Summary:**
+  - **Typeface Fallback Chain (Android 10+ / API 29+):**
+    - Upgraded `GboardEmojiFontRuntime.java` with `loadTypefaceFromFile(File)` using `android.graphics.fonts.Font.Builder` and `Typeface.CustomFallbackBuilder` with `.setSystemFallback("sans-serif")`.
+    - Resolved Skia/FreeType rendering failure on color emoji fonts (CBDT/CBLC): non-emoji/Latin characters seamlessly fallback to system sans-serif instead of causing text rendering errors or blank labels in Gboard's UI.
+    - Added graceful fallback to `Typeface.createFromFile(fontFile)` on older Android versions or builder exception.
+  - **SoftKeyDef Reflection & Emoji Key Identification:**
+    - Replaced brittle `metadata.toString()` inspection in `afterSoftKeyBound` with deep reflection in `isMetadataEmoji(Object metadata)`.
+    - Safely inspects Gboard's `SoftKeyDef` label array (field `g`) and action definitions to accurately identify emoji softkeys, eliminating false negatives where Java Object class names (`SoftKeyDef@...`) were previously evaluated.
+    - Dispatched `root.post(() -> applyToViewTree(root, custom, isKeyEmoji))` to ensure late-bound recycled TextViews in softkey pools reliably receive the custom Typeface.
+    - Updated `applyToTextView`: added `invalidate()` and `requestLayout()` calls to force instantaneous UI refresh.
+  - **Application Context Resolution:**
+    - Added `resolveAppContext(Context)` in `GboardEmojiFontSettings.java` to guarantee `preferences()` and font storage directory (`getFontFile()`) resolve consistently between `GboardPatchesSettingsActivity` and the background IME keyboard service (`InputMethodService`).
+  - **Material 3 Preview Isolation & Invalidation:**
+    - Refactored `GboardEmojiFontSettingsFeature.java`: separated the emoji sample preview into an isolated `previewRow` (`SAMPLE_EMOJIS` with `isMonospace = false`, 24sp) and a dedicated text `previewStatusRow` ("Font Status", `previewStatus`), avoiding mixed Latin/Emoji text in the typeface-override view.
+    - Expanded SAF document picker MIME types to include `font/ttf`, `font/otf`, `application/x-font-truetype`, `application/x-font-ttf`, and `application/octet-stream`.
+    - Added immediate cache invalidation (`GboardEmojiFontRuntime.invalidateCache()`) when custom fonts are imported, saved, or reset.
+  - **Memory-Safe SAF Document Loading:**
+    - Hardened `GboardPatchesSettingsActivity.java` against `OutOfMemoryError` during large TTF imports via SAF, presenting a user-friendly error toast instead of crashing.
+    - Optimized `readBinaryDocument` with 32KB streaming buffers and pre-allocated capacity.
+  - **Unit Testing & Fork Invariant Verification:**
+    - Added `testIsMetadataEmoji` unit test coverage in `GboardEmojiFontRuntimeTest.java`.
+    - Executed `scripts/verify-invariants.ps1` with 100% pass across all 4 critical fork pillars.
+- **Files Modified:**
+  - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/emojifont/GboardEmojiFontRuntime.java` (Modified)
+  - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/emojifont/GboardEmojiFontSettings.java` (Modified)
+  - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/emojifont/GboardEmojiFontSettingsFeature.java` (Modified)
+  - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/settings/GboardPatchesSettingsActivity.java` (Modified)
+  - `extensions/extension/src/test/java/dev/jason/gboardpatches/extension/emojifont/GboardEmojiFontRuntimeTest.java` (Modified)
+  - `Version.md` (Appended)
