@@ -253,3 +253,14 @@
   - `.github/workflows/release.yml` (Modified)
   - `.github/workflows/upstream-sync.yml` (Modified)
   - `Version.md` (Appended)
+
+### [2026-09-22 08:24:00 IST] Fix YAML Syntax in Release Workflow Run Block
+- **Status:** Resolved & Verified
+- **Version:** v1.0.0
+- **Repository:** https://github.com/mrdarksidetm/Gboard-patches
+- **Summary:**
+  - Resolved YAML parsing error on line 60 of `.github/workflows/release.yml` by adding the missing `run: |` block declaration before the metadata verification PowerShell script.
+  - Verified complete workflow definition structure for clean automated GitHub Actions execution.
+- **Files Modified:**
+  - `.github/workflows/release.yml` (Modified)
+  - `Version.md` (Appended)

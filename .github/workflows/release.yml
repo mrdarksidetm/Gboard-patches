@@ -57,6 +57,7 @@ jobs:
         env:
           REPO_SLUG: ${{ github.repository }}
           INPUT_TAG: ${{ inputs.tag }}
+        run: |
           $gradleText = Get-Content -LiteralPath "gradle.properties" -Raw
           $match = [regex]::Match($gradleText, '(?m)^\s*version\s*=\s*([^\r\n#]+?)\s*$')
           if (-not $match.Success) {
