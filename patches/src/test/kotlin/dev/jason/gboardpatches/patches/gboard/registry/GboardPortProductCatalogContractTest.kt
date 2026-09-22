@@ -405,9 +405,9 @@ class GboardPortProductCatalogContractTest {
         val byFeatureId = features().associateBy { feature -> feature["feature_id"].asString }
         val registrations = GboardPublishedPatchCatalog.morpheRegistrations
 
-        assertEquals(8, SOFT_KEY_FEATURE_CONTRACTS.size)
+        assertEquals(9, SOFT_KEY_FEATURE_CONTRACTS.size)
         assertEquals(
-            11,
+            12,
             features().sumOf { feature ->
                 feature.getAsJsonArray("contributions").count { contribution ->
                     contribution.asJsonObject["anchor_family_id"].asString == "soft_key_bind"

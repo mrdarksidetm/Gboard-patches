@@ -224,3 +224,16 @@
 - **Files Modified:**
   - `patches/src/main/kotlin/dev/jason/gboardpatches/patches/gboard/shared/GboardSoftKeyFamilyComposer.kt` (Modified)
   - `Version.md` (Appended)
+
+### [2026-09-22 08:12:00 IST] Align SoftKey Feature Contract Counts in GboardPortProductCatalogContractTest
+- **Status:** Resolved & Ready for Morphe Release
+- **Version:** v1.0.0
+- **Repository:** https://github.com/mrdarksidetm/Gboard-patches
+- **Summary:**
+  - Resolved unit test assertion mismatch in `GboardPortProductCatalogContractTest.kt`:
+    - Updated `SOFT_KEY_FEATURE_CONTRACTS.size` assertion from 8 to 9 to include the newly integrated `custom_emoji_font` feature contract.
+    - Updated `soft_key_bind` contribution count assertion from 11 to 12 reflecting the `custom_emoji_font.after_bind` contribution in `gboard-port-product-catalog.json`.
+  - Validated test assertions against canonical catalog contracts and Morphe packaging pipeline.
+- **Files Modified:**
+  - `patches/src/test/kotlin/dev/jason/gboardpatches/patches/gboard/registry/GboardPortProductCatalogContractTest.kt` (Modified)
+  - `Version.md` (Appended)
