@@ -237,3 +237,19 @@
 - **Files Modified:**
   - `patches/src/test/kotlin/dev/jason/gboardpatches/patches/gboard/registry/GboardPortProductCatalogContractTest.kt` (Modified)
   - `Version.md` (Appended)
+
+### [2026-09-22 08:16:00 IST] Autonomous Release Engine on Patch Changes & Upstream Ingestion
+- **Status:** Enhanced & Active
+- **Version:** v1.0.0
+- **Repository:** https://github.com/mrdarksidetm/Gboard-patches
+- **Summary:**
+  - Configured automated release triggers in `.github/workflows/release.yml`:
+    - Added automatic trigger on `push` to `main` when changes occur in `patches/**`, `extensions/**`, `gradle.properties`, or `patches-bundle.json`.
+    - Added `repository_dispatch` support for `new-patch` and `release` events.
+    - Upgraded metadata resolution to infer version and tag automatically from `gradle.properties` without requiring explicit manual inputs.
+    - Set `make_latest: true` on published GitHub releases ensuring Morphe consumers always discover the latest package.
+  - Linked `.github/workflows/upstream-sync.yml` to immediately dispatch `release.yml` upon merging verified upstream commits.
+- **Files Modified:**
+  - `.github/workflows/release.yml` (Modified)
+  - `.github/workflows/upstream-sync.yml` (Modified)
+  - `Version.md` (Appended)

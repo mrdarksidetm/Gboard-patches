@@ -213,3 +213,6 @@ jobs:
           git push origin main
 
           Write-Host "Successfully merged verified upstream updates into main!"
+          Write-Host "Triggering automated release workflow for newly synced patches..."
+          $env:GH_TOKEN = "${{ secrets.MORPHE_PACKAGES_TOKEN || secrets.GITHUB_TOKEN }}"
+          gh workflow run release.yml --repo $env:GITHUB_REPOSITORY
