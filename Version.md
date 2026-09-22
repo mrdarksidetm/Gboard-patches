@@ -128,6 +128,7 @@
   - **Unit Testing:**
     - Updated `GboardAdvancedVoice1803RuntimeSettingsTest.java` to test Rambler default backend seeding and `isRamblerEnabled()`.
     - Updated `GboardRambler1803OfficialSelectionRuntimeTest.java` to verify Rambler persistent agentic dictation and test isolation overrides.
+    - Updated `GboardAdvancedVoiceUniversalLocaleTest.java`: tested `UniversalSupportedLocaleSet` for US, India, and general locales.
   - **Files Created/Modified:**
     - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/advancedvoice/GboardAdvancedVoiceSettings.java` (Modified)
     - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/advancedvoice/GboardAdvancedVoice1803RuntimeSettings.java` (Modified)
@@ -182,3 +183,18 @@
   - .github/workflows/release.yml (Modified)
   - extensions/extension/src/main/java/dev/jason/gboardpatches/extension/settings/GboardPatchesSettingsActivity.java (Modified)
   - Version.md (Appended)
+
+### [2026-09-22 07:50:00 IST] Material 3 Expressive Color Tokens Standardization & Morphe Release v1.0.0 Dispatch
+- **Status:** Standardized & Released
+- **Version:** v1.0.0
+- **Repository:** https://github.com/mrdarksidetm/Gboard-patches
+- **Summary:**
+  - Standardized XML resource colors in `extensions/extension/src/main/res/values/colors.xml` and `values-night/colors.xml` to match the exact high-chroma Material 3 Expressive palette tokens (#3855E0 light / #7A94FF dark) rather than generic dynamic/Material You pastel tints.
+  - Retained clean constant definitions in `GboardAiWritingToolsRuntime.java` for voice command regex handling.
+  - Verified Morphe release bundle contract: `patches-1.0.0.mpp` generated and distributed as standard Morphe package format matching upstream release structure.
+  - Ran `scripts/verify-invariants.ps1`: 100% invariants passed across all fork pillars.
+- **Files Modified:**
+  - `extensions/extension/src/main/res/values/colors.xml` (Modified)
+  - `extensions/extension/src/main/res/values-night/colors.xml` (Modified)
+  - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/writingtools/GboardAiWritingToolsRuntime.java` (Modified)
+  - `Version.md` (Appended)

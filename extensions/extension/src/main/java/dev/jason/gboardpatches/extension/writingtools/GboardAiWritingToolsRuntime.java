@@ -37,6 +37,8 @@ public final class GboardAiWritingToolsRuntime {
             "enable_writing_tools_voice_commands";
     static final String FLAG_ENABLE_MODELESS_SMART_EDIT =
             "enable_nga_lab_modeless_smartedit";
+    static final String FLAG_MODELESS_SMART_EDIT_REGEX_VERSION =
+            GboardAiWritingToolsVoiceCommandPolicy.MODELESS_SMART_EDIT_REGEX_VERSION_FLAG;
     static final String FLAG_ENABLE_WRITING_TOOLS_LOG_WITH_PROOFREAD =
             "enable_writing_tools_log_with_proofread";
     static final String FLAG_ENABLE_WRITING_TOOLS_THUMB_UP_AND_DOWN =
