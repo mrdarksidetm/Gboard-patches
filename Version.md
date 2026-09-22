@@ -298,3 +298,16 @@
   - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/settings/GboardPatchesSettingsActivity.java` (Modified)
   - `extensions/extension/src/test/java/dev/jason/gboardpatches/extension/emojifont/GboardEmojiFontRuntimeTest.java` (Modified)
   - `Version.md` (Appended)
+### [2026-09-22 09:55:00 IST] Bump to v1.1.1 & Establish Continuous Patch Versioning Policy
+- **Status:** Upgraded to v1.1.1
+- **Version:** v1.1.1
+- **Repository:** https://github.com/mrdarksidetm/Gboard-patches
+- **Summary:**
+  - Bumped project release version to v1.1.1 across `gradle.properties`, `patches-bundle.json`, and distribution artifacts.
+  - Established continuous granular semantic patch versioning policy: every subsequent single update or bugfix will automatically bump the patch version (e.g. v1.1.1 -> v1.1.2 -> v1.1.3).
+  - Aligned Morphe release bundle URL to target `https://github.com/mrdarksidetm/Gboard-patches/releases/download/v1.1.1/patches-1.1.1.mpp`.
+  - Invariants validated via `scripts/verify-invariants.ps1`.
+- **Files Modified:**
+  - `gradle.properties` (Bumped to 1.1.1)
+  - `patches-bundle.json` (Bumped to 1.1.1 & updated download URL)
+  - `Version.md` (Appended)
