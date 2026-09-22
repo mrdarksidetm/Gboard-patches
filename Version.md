@@ -212,3 +212,15 @@
 - **Files Modified:**
   - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/emojifont/GboardEmojiFontSettingsFeature.java` (Modified)
   - `Version.md` (Appended)
+
+### [2026-09-22 08:03:00 IST] Fix Exhaustive When Expression for Custom Emoji Font in SoftKey Family Composer
+- **Status:** Resolved & Re-dispatching Build
+- **Version:** v1.0.0
+- **Repository:** https://github.com/mrdarksidetm/Gboard-patches
+- **Summary:**
+  - Resolved compileKotlin failure in `GboardSoftKeyFamilyComposer.kt`:
+    - Made `beforeDelegate()` `when (this)` expression exhaustive by explicitly mapping `CUSTOM_EMOJI_FONT` alongside `ZHUYIN_BOTTOM_ROW` to error branch (`$this has no before-stock contribution`).
+  - Executed `scripts/verify-invariants.ps1` with 100% pass across all 4 fork pillars.
+- **Files Modified:**
+  - `patches/src/main/kotlin/dev/jason/gboardpatches/patches/gboard/shared/GboardSoftKeyFamilyComposer.kt` (Modified)
+  - `Version.md` (Appended)

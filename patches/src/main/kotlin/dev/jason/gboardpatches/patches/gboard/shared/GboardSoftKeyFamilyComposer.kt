@@ -351,7 +351,8 @@ internal fun GboardSoftKeyFamilyFeature.beforeDelegate(): String = when (this) {
 
         move-result-object p1
     """.trimIndent().replace("->\n            ", "->")
-    GboardSoftKeyFamilyFeature.ZHUYIN_BOTTOM_ROW ->
+    GboardSoftKeyFamilyFeature.ZHUYIN_BOTTOM_ROW,
+    GboardSoftKeyFamilyFeature.CUSTOM_EMOJI_FONT ->
         error("$this has no before-stock contribution")
 }
 
