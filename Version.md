@@ -311,3 +311,33 @@
   - `gradle.properties` (Bumped to 1.1.1)
   - `patches-bundle.json` (Bumped to 1.1.1 & updated download URL)
   - `Version.md` (Appended)
+### [2026-09-23 22:25:00 IST] Autonomous Upstream Sync Resolution & Bump to v1.1.2
+- **Status:** Upgraded to v1.1.2 & Upstream Synced
+- **Version:** v1.1.2
+- **Repository:** https://github.com/mrdarksidetm/Gboard-patches
+- **Summary:**
+  - Resolved GitHub Actions upstream synchronization conflict between `origin/main` (v1.1.1) and upstream `jasonwu1994/Gboard-patches` (`cdb8a1c`).
+  - Merged upstream features:
+    - Custom Theme patch (`GboardCustomThemeGalleryFeature`, `GboardCustomThemeGalleryView`, `GboardCustomThemeInstaller`, zip importer, official Rboard theme repository integration).
+    - Toolbar Editing Buttons patch (`Select all`, `Copy`, `Cut`, and `Paste` quick actions in toolbar).
+    - Bugfix resolving Custom Symbols history saving to Emoticon history.
+  - Harmonized fork-specific enhancements with upstream additions:
+    - Reconciled `GboardKeyboardLayoutSettingsGroupFeature.java` imports for both custom theme and custom emoji font features.
+    - Preserved Material 3 Expressive UI card architecture while supporting upstream `SectionStyle.FULL_BLEED` in `GboardPatchesSettingsActivity.java`.
+    - Eliminated duplicate field definitions and cleaned lifecycle references in `GboardPatchesSettingsActivity.java`.
+    - Preserved bilingual translations for custom emoji font and upstream custom theme & toolbar editing strings in `gboard_settings_text.xml`.
+    - Bumped project version to v1.1.2 across `gradle.properties` and `patches-bundle.json` following continuous semantic patch versioning policy.
+    - Recalculated SHA-256 for merged `gboard-port-product-catalog.json` (43 total features) in `gboard-port-product-catalog.sha256`.
+    - Registered `custom_emoji_font`, `custom_theme`, and `editing_access_points` in `GboardPortProductCatalogContractTest.kt`.
+    - Hardened `.github/workflows/upstream-sync.yml` PR creation logic against missing GitHub label errors and provisioned `upstream-sync` label in repository.
+  - Validated all fork invariants via `scripts/verify-invariants.ps1` (Custom Emoji Font, Voice/Rambler, AI Writing Tools, Attribution & Credits).
+- **Files Modified:**
+  - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/keyboard/GboardKeyboardLayoutSettingsGroupFeature.java` (Merged)
+  - `extensions/extension/src/main/java/dev/jason/gboardpatches/extension/settings/GboardPatchesSettingsActivity.java` (Merged & Styled)
+  - `extensions/extension/src/main/settings-text/gboard_settings_text.xml` (Merged)
+  - `gradle.properties` (Bumped to 1.1.2)
+  - `patches-bundle.json` (Bumped to 1.1.2 & updated download URL)
+  - `patches/src/main/resources/gboard/gboard-port-product-catalog.sha256` (Recalculated)
+  - `patches/src/test/kotlin/dev/jason/gboardpatches/patches/gboard/registry/GboardPortProductCatalogContractTest.kt` (Merged)
+  - `.github/workflows/upstream-sync.yml` (Hardened)
+  - `Version.md` (Appended)

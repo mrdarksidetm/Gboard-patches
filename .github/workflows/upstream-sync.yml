@@ -117,7 +117,11 @@ jobs:
           "@
 
               if (-not $existingPr) {
-                  gh pr create --base main --head $syncBranch --title "🚨 [Upstream Sync] Merge conflict detected from jasonwu1994/Gboard-patches" --body "$body" --label "upstream-sync"
+                  try {
+                      gh pr create --base main --head $syncBranch --title "🚨 [Upstream Sync] Merge conflict detected from jasonwu1994/Gboard-patches" --body "$body" --label "upstream-sync"
+                  } catch {
+                      gh pr create --base main --head $syncBranch --title "🚨 [Upstream Sync] Merge conflict detected from jasonwu1994/Gboard-patches" --body "$body"
+                  }
               } else {
                   gh pr comment $existingPr --body "$body"
               }
