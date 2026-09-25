@@ -341,3 +341,14 @@
   - `patches/src/test/kotlin/dev/jason/gboardpatches/patches/gboard/registry/GboardPortProductCatalogContractTest.kt` (Merged)
   - `.github/workflows/upstream-sync.yml` (Hardened)
   - `Version.md` (Appended)
+### [2026-09-25 17:53:00 IST] Add Morphe Direct Integration Badge & Web-Compatible Asset Paths
+- **Status:** Integrated & Documented
+- **Version:** v1.1.2
+- **Repository:** https://github.com/mrdarksidetm/Gboard-patches
+- **Summary:**
+  - Added official styled Morphe badge SVG asset in `assests/images/Morphe_Badge.svg` linking directly to `https://morphe.software/add-source?github=mrdarksidetm/Gboard-patches`.
+  - Updated `README.md` hero section to display the custom Morphe badge with web-compatible forward slashes for cross-platform GitHub rendering.
+- **Files Created/Modified:**
+  - `assests/images/Morphe_Badge.svg` (Created)
+  - `README.md` (Modified)
+  - `Version.md` (Appended)
